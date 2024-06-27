@@ -7,6 +7,9 @@ export default {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    fontFamily: {
+      noteSans: ['Noto Sans JP', 'sans-serif'],
+    },
     extend: {},
   },
   darkMode: 'class',

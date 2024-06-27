@@ -1,6 +1,6 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import './tailwind.css';
 import { NextUIProvider } from '@nextui-org/react';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { ThemeProvider } from 'next-themes';
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -12,7 +12,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className='font-noteSans'>
         <NextUIProvider>
           <ThemeProvider attribute='class' defaultTheme='dark'>
             {children}
