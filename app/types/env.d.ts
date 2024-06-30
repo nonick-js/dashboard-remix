@@ -6,6 +6,16 @@ declare namespace NodeJS {
     readonly BASE_URL: string;
 
     /**
+     * データベースの接続URL
+     */
+    readonly DATABASE_URL: string;
+
+    /**
+     * データベースのコレクション名
+     */
+    readonly DATABASE_NAME: string;
+
+    /**
      * セッションに使用するシークレットキー
      */
     readonly SESSION_SECRET: string;
