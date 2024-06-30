@@ -1,5 +1,6 @@
 import { Authenticator } from 'remix-auth';
 import { type DiscordProfile, DiscordStrategy } from 'remix-auth-discord';
+import { Discord } from '~/libs/constants';
 import { sessionStorage } from './session';
 
 export interface DiscordUser {
@@ -25,15 +26,15 @@ const discordStrategy = new DiscordStrategy(
   async ({ accessToken, extraParams, profile }): Promise<DiscordUser> => {
     let avatarUrl: string;
 
-    if (profile.__json.avatar) {
+    if (profile.__json.avatar === null) {
       const defaultAvatarNumber =
         profile.__json.discriminator === '0'
           ? Number(BigInt(profile.id) >> BigInt(22)) % 6
           : Number.parseInt(profile.__json.discriminator) % 5;
-      avatarUrl = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
+      avatarUrl = `${Discord.Endpoints.CDN}/embed/avatars/${defaultAvatarNumber}.png`;
     } else {
       const format = profile.__json.avatar?.startsWith('a_') ? 'git' : 'png';
-      avatarUrl = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.__json.avatar}.${format}`;
+      avatarUrl = `${Discord.Endpoints.CDN}/avatars/${profile.id}/${profile.__json.avatar}.${format}`;
     }
 
     return {
