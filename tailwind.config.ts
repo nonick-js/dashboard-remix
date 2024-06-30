@@ -10,7 +10,15 @@ export default {
     fontFamily: {
       noteSans: ['Noto Sans JP', 'sans-serif'],
     },
-    extend: {},
+    extend: {
+      container: {
+        center: true,
+        padding: '1.5rem',
+        screens: {
+          '2xl': '1280px',
+        },
+      },
+    },
   },
   darkMode: 'class',
   plugins: [nextui()],
