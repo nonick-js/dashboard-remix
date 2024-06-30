@@ -26,6 +26,11 @@ declare namespace NodeJS {
     readonly DISCORD_ID: string;
 
     /**
+     * DiscordBotの招待リンクに追加する権限
+     */
+    readonly DISCORD_PERMISSION: string;
+
+    /**
      * Discord Oauth2に使用するクライアントシークレット
      */
     readonly DISCORD_SECRET: string;
