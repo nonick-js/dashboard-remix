@@ -2,7 +2,7 @@ import { Icon } from '@iconify-icon/react/dist/iconify.js';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { useContext } from 'react';
 import { FilterValueContext } from './contexts';
-import { GuildCard } from './guild-card';
+import { GuildCard, GuildCardSkeleton } from './guild-card';
 
 export function GuildList({ guilds }: { guilds: RESTAPIPartialCurrentUserGuild[] }) {
   const { value } = useContext(FilterValueContext);
@@ -27,6 +27,19 @@ export function GuildList({ guilds }: { guilds: RESTAPIPartialCurrentUserGuild[]
       {filteredGuilds.map((guild) => (
         <GuildCard key={guild.id} guild={guild} />
       ))}
+    </div>
+  );
+}
+
+export function GuildListSkeleton() {
+  return (
+    <div className='grid grid-cols-12 gap-6'>
+      {Array(4)
+        .fill(null)
+        .map((_, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          <GuildCardSkeleton key={index} />
+        ))}
     </div>
   );
 }

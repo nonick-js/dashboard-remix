@@ -1,14 +1,13 @@
-import type { LoaderFunction } from '@remix-run/node';
-import { type MetaFunction, json, useLoaderData } from '@remix-run/react';
+import type { HeadersFunction, LoaderFunction } from '@remix-run/node';
+import { Await, type MetaFunction, defer, json, useLoaderData } from '@remix-run/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { type DiscordUser, auth } from '~/.server/auth';
-import { getMutualGuilds } from '~/.server/discord';
+import { getManagedMutualGuilds, getMutualGuilds } from '~/.server/discord';
 import { Header, HeaderDescription, HeaderTitle } from '~/components/header';
-import { Discord } from '~/libs/constants';
-import { hasPermission } from '~/libs/utils';
+import { wait } from '~/libs/utils';
 import { FilterValueContext } from './contexts';
-import { GuildList } from './guild-list';
+import { GuildList, GuildListSkeleton } from './guild-list';
 import { Navbar } from './navbar';
 import { Toolbar } from './toolbar';
 
@@ -17,24 +16,19 @@ type LoaderResult = {
   guilds: RESTAPIPartialCurrentUserGuild[];
 };
 
+export const headers: HeadersFunction = () => ({
+  'Cache-Control': 'no-store',
+});
+
 export const meta: MetaFunction = () => {
   return [{ title: 'サーバー選択' }];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const user = await auth.isAuthenticated(request, {
-    failureRedirect: '/login',
-  });
+  const user = await auth.isAuthenticated(request, { failureRedirect: '/login' });
+  const guildsPromise = getManagedMutualGuilds(user.accessToken);
 
-  const mutualGuilds = await getMutualGuilds(user.accessToken);
-  const adminGuilds = mutualGuilds.filter((guild) =>
-    hasPermission(guild.permissions, Discord.Permissions.ManageGuild),
-  );
-
-  return json(
-    { user, guilds: adminGuilds },
-    { headers: { 'Cache-Control': 'max-age=10, private' } },
-  );
+  return defer({ user, guilds: guildsPromise });
 };
 
 export default function DashboardPage() {
@@ -44,7 +38,7 @@ export default function DashboardPage() {
   return (
     <>
       <Navbar user={user} />
-      <div className='container flex flex-col gap-6 pt-3'>
+      <div className='container flex flex-col gap-6 pt-3 pb-6'>
         <Header>
           <HeaderTitle>サーバー選択</HeaderTitle>
           <HeaderDescription>
@@ -53,7 +47,9 @@ export default function DashboardPage() {
         </Header>
         <FilterValueContext.Provider value={{ value, setValue }}>
           <Toolbar />
-          <GuildList guilds={guilds} />
+          <Suspense fallback={<GuildListSkeleton />}>
+            <Await resolve={guilds}>{(guilds) => <GuildList guilds={guilds} />}</Await>
+          </Suspense>
         </FilterValueContext.Provider>
       </div>
     </>
