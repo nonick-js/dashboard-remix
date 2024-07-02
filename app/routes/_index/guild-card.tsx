@@ -19,7 +19,7 @@ export function GuildCard({ guild }: { guild: RESTAPIPartialCurrentUserGuild }) 
           src={
             guild.icon ? `${Discord.Endpoints.CDN}/icons/${guild.id}/${guild.icon}.png` : undefined
           }
-          classNames={{ base: 'w-[70px] h-[70px]', name: 'text-lg' }}
+          classNames={{ base: 'w-[70px] h-[70px]', name: 'text-sm text-nowrap' }}
           alt={`${guild.name}のサーバーアイコン`}
           showFallback
         />
