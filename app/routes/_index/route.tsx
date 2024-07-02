@@ -1,9 +1,10 @@
 import type { HeadersFunction, LoaderFunction } from '@remix-run/node';
-import { Await, type MetaFunction, defer, useLoaderData } from '@remix-run/react';
+import { Await, type MetaFunction, defer, useLoaderData, useRouteError } from '@remix-run/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { Suspense, useState } from 'react';
 import { type DiscordUser, auth } from '~/.server/auth';
 import { getManagedMutualGuilds } from '~/.server/discord';
+import { ErrorAlert } from '~/components/error-alert';
 import { Header, HeaderDescription, HeaderTitle } from '~/components/header';
 import { FilterValueContext } from './contexts';
 import { GuildList, GuildListSkeleton } from './guild-list';
@@ -63,6 +64,18 @@ export default function DashboardPage() {
             </Await>
           </Suspense>
         </FilterValueContext.Provider>
+      </div>
+    </>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <>
+      <Navbar />
+      <div className='w-full h-[calc(100dvh_-_64px)] flex items-center justify-center '>
+        <ErrorAlert error={error} />
       </div>
     </>
   );

@@ -27,7 +27,7 @@ export function Toolbar({ isDisabledInput }: { isDisabledInput?: boolean }) {
         to='/invite'
         className='rounded-medium w-full sm:w-[160px]'
         color='primary'
-        startContent={<Icon icon='solar:add-circle-bold' className='text-[20px]' />}
+        startContent={<Icon icon='solar:widget-add-bold' className='text-[20px]' />}
         disableRipple
       >
         サーバーを追加
@@ -43,7 +43,7 @@ export function ToolbarSkeleton() {
       <Button
         className='rounded-medium w-full sm:w-[160px]'
         color='primary'
-        startContent={<Icon icon='solar:add-circle-bold' className='text-[20px]' />}
+        startContent={<Icon icon='solar:widget-add-bold' className='text-[20px]' />}
         isDisabled
       >
         サーバーを追加
