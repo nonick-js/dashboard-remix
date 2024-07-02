@@ -6,7 +6,7 @@ export const loader: LoaderFunction = async () => {
     `${Discord.Endpoints.API}/oauth2/authorize?${new URLSearchParams({
       client_id: process.env.DISCORD_ID,
       permissions: process.env.DISCORD_PERMISSION,
-      redirect_uri: process.env.BASE_URL,
+      redirect_uri: `${process.env.BASE_URL}/invite/callback`,
       response_type: 'code',
       scope: 'bot',
     })}`,

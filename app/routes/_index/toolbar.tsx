@@ -24,7 +24,7 @@ export function Toolbar({ isDisabledInput }: { isDisabledInput?: boolean }) {
       />
       <Button
         as={Link}
-        to='/new'
+        to='/invite'
         className='rounded-medium w-full sm:w-[160px]'
         color='primary'
         startContent={<Icon icon='solar:add-circle-bold' className='text-[20px]' />}
