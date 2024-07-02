@@ -2,6 +2,7 @@ import './tailwind.css';
 import { NextUIProvider } from '@nextui-org/react';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { ThemeProvider } from 'next-themes';
+import { ConsoleWarningProvider } from './components/console-warn';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className='font-noteSans'>
+        <ConsoleWarningProvider>
         <NextUIProvider>
           <ThemeProvider attribute='class' defaultTheme='dark'>
             {children}
@@ -20,6 +22,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Scripts />
           </ThemeProvider>
         </NextUIProvider>
+        </ConsoleWarningProvider>
       </body>
     </html>
   );
