@@ -1,10 +1,10 @@
 import { Icon } from '@iconify-icon/react/dist/iconify.js';
-import { Button, Input, Link } from '@nextui-org/react';
+import { Button, Input, Skeleton } from '@nextui-org/react';
+import { Link } from '@remix-run/react';
 import { useContext } from 'react';
-import { Discord } from '~/libs/constants';
 import { FilterValueContext } from './contexts';
 
-export function Toolbar() {
+export function Toolbar({ isDisabledInput }: { isDisabledInput?: boolean }) {
   const { value, setValue } = useContext(FilterValueContext);
 
   return (
@@ -20,15 +20,31 @@ export function Toolbar() {
           <Icon icon='solar:magnifer-outline' className='text-default-500 text-[20px]' />
         }
         isClearable
+        isDisabled={isDisabledInput}
       />
       <Button
         as={Link}
-        href={'/new'}
-        className='rounded-medium w-full sm:w-auto'
+        to='/new'
+        className='rounded-medium w-full sm:w-[160px]'
         color='primary'
         startContent={<Icon icon='solar:add-circle-bold' className='text-[20px]' />}
         disableRipple
-        isExternal
+      >
+        サーバーを追加
+      </Button>
+    </div>
+  );
+}
+
+export function ToolbarSkeleton() {
+  return (
+    <div className='flex flex-col sm:flex-row w-full gap-3 sm:gap-2'>
+      <Skeleton className='h-[40px] sm:flex-1 rounded-medium' />
+      <Button
+        className='rounded-medium w-full sm:w-[160px]'
+        color='primary'
+        startContent={<Icon icon='solar:add-circle-bold' className='text-[20px]' />}
+        isDisabled
       >
         サーバーを追加
       </Button>

@@ -1,20 +1,14 @@
 import type { HeadersFunction, LoaderFunction } from '@remix-run/node';
-import { Await, type MetaFunction, defer, json, useLoaderData } from '@remix-run/react';
+import { Await, type MetaFunction, defer, useLoaderData } from '@remix-run/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { Suspense, useState } from 'react';
 import { type DiscordUser, auth } from '~/.server/auth';
-import { getManagedMutualGuilds, getMutualGuilds } from '~/.server/discord';
+import { getManagedMutualGuilds } from '~/.server/discord';
 import { Header, HeaderDescription, HeaderTitle } from '~/components/header';
-import { wait } from '~/libs/utils';
 import { FilterValueContext } from './contexts';
 import { GuildList, GuildListSkeleton } from './guild-list';
 import { Navbar } from './navbar';
-import { Toolbar } from './toolbar';
-
-type LoaderResult = {
-  user: DiscordUser;
-  guilds: RESTAPIPartialCurrentUserGuild[];
-};
+import { Toolbar, ToolbarSkeleton } from './toolbar';
 
 export const headers: HeadersFunction = () => ({
   'Cache-Control': 'no-store',
@@ -22,6 +16,11 @@ export const headers: HeadersFunction = () => ({
 
 export const meta: MetaFunction = () => {
   return [{ title: 'サーバー選択' }];
+};
+
+type LoaderResult = {
+  user: DiscordUser;
+  guilds: RESTAPIPartialCurrentUserGuild[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -46,12 +45,27 @@ export default function DashboardPage() {
           </HeaderDescription>
         </Header>
         <FilterValueContext.Provider value={{ value, setValue }}>
-          <Toolbar />
-          <Suspense fallback={<GuildListSkeleton />}>
-            <Await resolve={guilds}>{(guilds) => <GuildList guilds={guilds} />}</Await>
+          <Suspense fallback={<Skeleton />}>
+            <Await resolve={guilds}>
+              {(guilds) => (
+                <>
+                  <Toolbar />
+                  <GuildList guilds={guilds} />
+                </>
+              )}
+            </Await>
           </Suspense>
         </FilterValueContext.Provider>
       </div>
+    </>
+  );
+}
+
+function Skeleton() {
+  return (
+    <>
+      <ToolbarSkeleton />
+      <GuildListSkeleton />
     </>
   );
 }
