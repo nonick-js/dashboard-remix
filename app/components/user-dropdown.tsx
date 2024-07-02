@@ -16,7 +16,7 @@ import type { DiscordUser } from '~/.server/auth';
 
 export function UserDropdown({ user }: { user: DiscordUser }) {
   return (
-    <Dropdown showArrow>
+    <Dropdown showArrow placement='bottom-end'>
       <DropdownTrigger>
         <Avatar
           as='button'
@@ -31,8 +31,8 @@ export function UserDropdown({ user }: { user: DiscordUser }) {
         aria-label='Discordアカウントの情報を表示するドロップダウン'
         disabledKeys={['profile']}
       >
-        <DropdownSection showDivider>
-          <DropdownItem key='profile' className='opacity-100' isReadOnly>
+        <DropdownSection showDivider classNames={{ base: 'mb-0', divider: 'mb-1' }}>
+          <DropdownItem key='profile' textValue='profile' className='opacity-100' isReadOnly>
             <User
               name={user.globalName ?? user.username}
               description={
@@ -47,7 +47,7 @@ export function UserDropdown({ user }: { user: DiscordUser }) {
             />
           </DropdownItem>
         </DropdownSection>
-        <DropdownItem key='logout' isReadOnly className='p-0'>
+        <DropdownItem key='logout' textValue='logout' isReadOnly className='p-0'>
           <Form action='/logout' method='post'>
             <Button
               type='submit'
