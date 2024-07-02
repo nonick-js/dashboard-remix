@@ -1,8 +1,13 @@
 import './tailwind.css';
 import { NextUIProvider } from '@nextui-org/react';
+import type { LinksFunction } from '@remix-run/node';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import { ThemeProvider } from 'next-themes';
+import nprogressStyles from '~/nprogress.css?url';
 import { ConsoleWarningProvider } from './components/console-warn';
+import { ProgressBar } from './components/progressbar';
+
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: nprogressStyles }];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -15,13 +20,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className='font-noteSans'>
         <ConsoleWarningProvider>
-        <NextUIProvider>
-          <ThemeProvider attribute='class' defaultTheme='dark'>
-            {children}
-            <ScrollRestoration />
-            <Scripts />
-          </ThemeProvider>
-        </NextUIProvider>
+          <NextUIProvider>
+            <ThemeProvider attribute='class' defaultTheme='dark'>
+              {children}
+              <ScrollRestoration />
+              <Scripts />
+            </ThemeProvider>
+          </NextUIProvider>
         </ConsoleWarningProvider>
       </body>
     </html>
@@ -30,8 +35,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <main>
-      <Outlet />
-    </main>
+    <>
+      <main>
+        <Outlet />
+      </main>
+      <ProgressBar showSpinner={false} />
+    </>
   );
 }
