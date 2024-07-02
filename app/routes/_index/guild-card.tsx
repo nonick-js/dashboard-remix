@@ -1,4 +1,4 @@
-import { Avatar, Card, Skeleton } from '@nextui-org/react';
+import { Avatar, Card, Skeleton, cn } from '@nextui-org/react';
 import { Link } from '@remix-run/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { Discord } from '~/libs/constants';
@@ -31,9 +31,12 @@ export function GuildCard({ guild }: { guild: RESTAPIPartialCurrentUserGuild }) 
   );
 }
 
-export function GuildCardSkeleton() {
+export function GuildCardSkeleton({ className }: { className?: string }) {
   return (
-    <Card className={'col-span-12 sm:col-span-6 lg:col-span-3 overflow-hidden h-full'} fullWidth>
+    <Card
+      className={cn('col-span-12 sm:col-span-6 lg:col-span-3 overflow-hidden h-full', className)}
+      fullWidth
+    >
       <div className='w-full flex items-center justify-center h-28'>
         <Skeleton className='w-[70px] h-[70px] rounded-full' />
       </div>

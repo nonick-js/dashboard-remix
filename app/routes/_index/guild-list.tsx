@@ -1,4 +1,5 @@
 import { Icon } from '@iconify-icon/react/dist/iconify.js';
+import { cn } from '@nextui-org/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { useContext } from 'react';
 import { FilterValueContext } from './contexts';
@@ -38,7 +39,7 @@ export function GuildListSkeleton() {
         .fill(null)
         .map((_, index) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          <GuildCardSkeleton key={index} />
+          <GuildCardSkeleton className={cn({ 'max-sm:hidden': index > 1 })} key={index} />
         ))}
     </div>
   );

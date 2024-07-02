@@ -45,7 +45,14 @@ export default function DashboardPage() {
           </HeaderDescription>
         </Header>
         <FilterValueContext.Provider value={{ value, setValue }}>
-          <Suspense fallback={<Skeleton />}>
+          <Suspense
+            fallback={
+              <>
+                <ToolbarSkeleton />
+                <GuildListSkeleton />
+              </>
+            }
+          >
             <Await resolve={guilds}>
               {(guilds) => (
                 <>
@@ -57,15 +64,6 @@ export default function DashboardPage() {
           </Suspense>
         </FilterValueContext.Provider>
       </div>
-    </>
-  );
-}
-
-function Skeleton() {
-  return (
-    <>
-      <ToolbarSkeleton />
-      <GuildListSkeleton />
     </>
   );
 }
