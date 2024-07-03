@@ -21,7 +21,7 @@ declare namespace NodeJS {
     readonly SESSION_SECRET: string;
 
     /**
-     * Discord Oauth2に使用するクライアントID
+     * DiscordBotのクライアントID
      */
     readonly DISCORD_ID: string;
 
@@ -31,8 +31,13 @@ declare namespace NodeJS {
     readonly DISCORD_PERMISSION: string;
 
     /**
-     * Discord Oauth2に使用するクライアントシークレット
+     * DiscordOauth2のクライアントシークレット
      */
     readonly DISCORD_SECRET: string;
+
+    /**
+     * DiscordBotのトークン
+     */
+    readonly DISCORD_TOKEN: string;
   }
 }

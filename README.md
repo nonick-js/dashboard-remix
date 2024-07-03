@@ -3,20 +3,7 @@
 > [!WARNING]
 > このプロジェクトは現在開発中であり、本番環境で動作させる準備が整っていません。
 
-[Remix](https://remix.run)で構築された、[NoNICK.js](https://github.com/nonick-js/bot)のWebダッシュボード
-
-## 🚧Progress
-- [x] Discord OAuth2を使用したセッション管理
-- [ ] `favicon.ico`、`robots.txt`の作成
-- [ ] 各ページの作成
-  - [x] `/` ... サーバー選択ページ
-  - [ ] `/guilds/$id` ... Bot設定ページ
-    - [ ] ... ページの作成
-    - [ ] ... サーバーサイドの処理
-    - [ ] ... サイドバーの作成
-    - [ ] ... フォーム用コンポーネントの作成
-    - [ ] ... レスポンシブ対応
-    - [ ] ... エラーハンドリング
+[Remix](https://remix.run)で構築された、NoNICK.jsの設定を行えるWebダッシュボード
 
 ## 📑Usage
 ### Discordアプリケーションを作成する
@@ -34,18 +21,15 @@
 |`DATABASE_URL`|MongoDBの接続に使用するURL|
 |`DATABASE_NAME`|MongoDBのコレクション名|
 |`SESSION_SECRET`|セッションに使用するシークレットキー|
-|`DISCORD_ID`|Discord OAuth2に使用するクライアントID|
-|`DISCORD_SECRET`|Discord Oauth2に使用するクライアントシークレット|
+|`DISCORD_ID`|DiscordBotのクライアントID|
+|`DISCORD_SECRET`|DiscordOauth2のクライアントシークレット|
 |`DISCORD_PERMISSION`|DiscordBotの招待リンクに追加する権限|
+|`DISCORD_TOKEN`|DiscordBotのトークン|
 
-`openssl`が使用できる場合、以下のコマンドで`SESSION_SECRET`の値を作成できます。
+以下のコマンドで`SESSION_SECRET`の値を作成できます。
 ```sh
 openssl rand -base64 32
 ```
-
-`DISCORD_ID`と`DISCORD_SECRET`は、[Discord開発者ポータル](https://discord.com/developers/applications)でアプリを選択し、「OAuth2」タブにアクセスすることで取得できます。
-
-![](.github/assets/how_to_check_clientInfo.png)
 
 設定が終わったら、以下のコマンドを使用して開発サーバーを起動します。
 
