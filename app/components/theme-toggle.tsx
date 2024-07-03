@@ -13,8 +13,14 @@ export function ThemeToggle(props: ButtonProps) {
       isIconOnly
       {...props}
     >
-      <Icon icon='solar:sun-bold' className='text-[22px] absolute scale-100 dark:scale-0' />
-      <Icon icon='solar:moon-bold' className='text-[22px] absolute scale-0 dark:scale-100' />
+      <Icon
+        icon='solar:sun-bold'
+        className='text-[20px] text-default-500 absolute scale-100 dark:scale-0'
+      />
+      <Icon
+        icon='solar:moon-bold'
+        className='text-[20px] text-default-500 absolute scale-0 dark:scale-100'
+      />
       <span className='sr-only'>Toggle theme</span>
     </Button>
   );

@@ -12,7 +12,7 @@ export function Navbar({ user }: { user?: DiscordUser }) {
       <NavbarSidebar />
       <NavbarBrand>
         <Link to='/'>
-          <Logo width={120} />
+          <Logo height={20} />
         </Link>
       </NavbarBrand>
       <NavbarContent className='flex gap-2 items-center' justify='end'>

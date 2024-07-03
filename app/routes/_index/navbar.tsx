@@ -8,7 +8,7 @@ export function Navbar({ user }: { user?: DiscordUser }) {
   return (
     <NextUINavbar maxWidth='xl'>
       <NavbarBrand>
-        <Logo width={120} />
+        <Logo height={20} />
       </NavbarBrand>
       <NavbarContent className='flex gap-2 items-center' justify='end'>
         <ThemeToggle />

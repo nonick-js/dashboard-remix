@@ -15,7 +15,7 @@ export function ErrorAlert({ error }: { error: unknown }) {
   return (
     <div className='flex flex-col items-center gap-4'>
       <Icon
-        icon='solar:danger-triangle-bold'
+        icon='solar:danger-triangle-bold-duotone'
         className='text-warning text-[150px] sm:text-[180px]'
       />
       <div className='text-center'>
