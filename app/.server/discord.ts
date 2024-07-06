@@ -69,7 +69,7 @@ export async function getMutualGuilds(accessToken: string) {
 }
 
 /** ユーザーが`MANAGED_GUILD`権限を所持しており、Botとユーザーが参加しているDiscordサーバーを取得 */
-export async function getManagedMutualGuilds(accessToken: string) {
+export async function getMutualManagedGuilds(accessToken: string) {
   const mutualGuilds = await getMutualGuilds(accessToken);
 
   return mutualGuilds.filter((guild) => hasPermission(guild.permissions, Permissions.ManageGuild));
@@ -93,7 +93,7 @@ async function fetchWithDiscordRateLimit(
     if (process.env.NODE_ENV === 'development') {
       console.log(
         [
-          chalk.yellow.bold('[Too Many Requests]'),
+          chalk.yellow.bold('[429]'),
           chalk.white(`${retryAfter}秒後に再試行します...`),
           chalk.dim(`(${input.toString()})`),
         ].join(' '),
