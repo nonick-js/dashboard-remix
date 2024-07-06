@@ -28,9 +28,9 @@ export default function Layout() {
   return (
     <ManagedMutualGuildsContext.Provider value={guilds}>
       <Navbar user={user} />
-      <div className='container flex gap-6'>
+      <div className='container flex gap-8'>
         <Sidebar />
-        <div className='flex-1 flex flex-col gap-6 pt-3'>
+        <div className='flex-1 flex flex-col gap-6'>
           <Outlet />
         </div>
       </div>

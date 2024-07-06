@@ -41,7 +41,7 @@ export default function DashboardPage() {
   return (
     <>
       <Navbar user={user} />
-      <div className='container flex flex-col gap-6 pt-3 pb-6'>
+      <div className='container flex flex-col gap-6 pb-6'>
         <Header>
           <HeaderTitle>サーバー選択</HeaderTitle>
           <HeaderDescription>
@@ -77,7 +77,7 @@ export function ErrorBoundary() {
   return (
     <>
       <Navbar />
-      <div className='w-full h-[calc(100dvh_-_64px)] flex items-center justify-center '>
+      <div className='w-full h-[calc(100dvh_-_80px)] flex items-center justify-center '>
         <ErrorAlert error={error} />
       </div>
     </>

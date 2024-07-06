@@ -8,11 +8,11 @@ import { NavbarSidebar } from './navbar-sidebar';
 
 export function Navbar({ user }: { user?: DiscordUser }) {
   return (
-    <NextUINavbar maxWidth='xl'>
+    <NextUINavbar maxWidth='xl' classNames={{ base: 'h-20' }}>
       <NavbarSidebar />
       <NavbarBrand>
         <Link to='/'>
-          <Logo height={20} />
+          <Logo height={18} />
         </Link>
       </NavbarBrand>
       <NavbarContent className='flex gap-2 items-center' justify='end'>

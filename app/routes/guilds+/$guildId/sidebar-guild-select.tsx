@@ -10,7 +10,7 @@ export function SidebarGuildSelect() {
 
   return (
     <GuildSelect
-      classNames={{ trigger: 'h-14' }}
+      classNames={{ trigger: 'h-16' }}
       onChange={(e) => navigate(`/guilds/${e.target.value}`)}
       guilds={guilds}
       defaultSelectedKeys={guildId ? [guildId] : []}
