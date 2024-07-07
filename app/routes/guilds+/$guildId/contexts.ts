@@ -1,4 +1,4 @@
-import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { createContext } from 'react';
+import type { LoaderResult } from './route';
 
-export const ManagedMutualGuildsContext = createContext<RESTAPIPartialCurrentUserGuild[]>([]);
+export const LoaderDataContext = createContext<Partial<LoaderResult>>({});

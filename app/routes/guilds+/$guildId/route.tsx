@@ -3,11 +3,11 @@ import { Outlet, json, useLoaderData } from '@remix-run/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { type DiscordUser, auth } from '~/.server/auth';
 import { getMutualManagedGuilds } from '~/.server/discord';
-import { ManagedMutualGuildsContext } from './contexts';
+import { LoaderDataContext } from './contexts';
 import { Navbar } from './navbar';
 import { Sidebar } from './sidebar';
 
-type LoaderResult = {
+export type LoaderResult = {
   user: DiscordUser;
   guilds: RESTAPIPartialCurrentUserGuild[];
 };
@@ -26,14 +26,16 @@ export default function Layout() {
   const { user, guilds } = useLoaderData<LoaderResult>();
 
   return (
-    <ManagedMutualGuildsContext.Provider value={guilds}>
-      <Navbar user={user} />
+    <LoaderDataContext.Provider value={{ user, guilds }}>
       <div className='container flex gap-8'>
-        <Sidebar />
-        <div className='flex-1 flex flex-col gap-6'>
-          <Outlet />
+        <Sidebar className='sticky max-lg:hidden' />
+        <div className='flex-1'>
+          <Navbar />
+          <div className='flex flex-col gap-6'>
+            <Outlet />
+          </div>
         </div>
       </div>
-    </ManagedMutualGuildsContext.Provider>
+    </LoaderDataContext.Provider>
   );
 }

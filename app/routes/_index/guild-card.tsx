@@ -1,5 +1,4 @@
-import { Avatar, Card, Skeleton, cn } from '@nextui-org/react';
-import { Link } from '@remix-run/react';
+import { Avatar, Card, Link, Skeleton, cn } from '@nextui-org/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { Discord } from '~/libs/constants';
 import { truncateString } from '~/libs/utils';
@@ -8,8 +7,8 @@ export function GuildCard({ guild }: { guild: RESTAPIPartialCurrentUserGuild }) 
   return (
     <Card
       as={Link}
-      to={`/guilds/${guild.id}`}
-      className='col-span-12 sm:col-span-6 lg:col-span-3 overflow-hidden h-full'
+      href={`/guilds/${guild.id}`}
+      className='col-span-12 sm:col-span-6 lg:col-span-3 overflow-hidden h-full hover:opacity-100 active:opacity-100'
       fullWidth
       isPressable
     >
