@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import type {
   APIGuild,
+  APIGuildMember,
   APIRole,
   RESTAPIPartialCurrentUserGuild,
   RESTRateLimit,
@@ -31,6 +32,19 @@ export async function getRoles(guildId: string) {
 
   if (!res.ok) throw new Error(res.statusText);
   return await res.json<APIRole[]>();
+}
+
+/** Discordサーバーに参加しているメンバーを取得 */
+export async function getGuildMember(guildId: string, userId: string) {
+  const res = await fetchWithDiscordRateLimit(
+    `${Endpoints.API}/guilds/${guildId}/members/${userId}`,
+    {
+      headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}` },
+    },
+  );
+
+  if (!res.ok) throw new Error(res.statusText);
+  return await res.json<APIGuildMember>();
 }
 
 /** Discordサーバーを取得 */

@@ -116,7 +116,7 @@ function SidebarNavigationListBox({ items }: { items: NavigationItemConfig[] }) 
     <Listbox classNames={{ base: 'px-2 py-1' }} aria-label='ナビゲーションメニュー'>
       {items.map((item) => {
         const href = `/guilds/${guildId}/${item.path}`;
-        const isSamePath = location.pathname === href;
+        const isSamePath = location.pathname === href || `${location.pathname}/` === href;
 
         return (
           <ListboxItem
@@ -126,7 +126,7 @@ function SidebarNavigationListBox({ items }: { items: NavigationItemConfig[] }) 
                 'bg-default-300/40': isSamePath,
               }),
             }}
-            href={!isSamePath ? `/guilds/${guildId}/${item.path}` : undefined}
+            href={isSamePath ? undefined : href}
             key={item.path}
             aria-label={item.label}
             textValue={item.path}
