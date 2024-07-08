@@ -32,4 +32,6 @@ export function ProgressBar({ ...props }: Partial<NProgress.NProgressOptions>) {
     // when the state is idle then we can to complete the progress bar
     if (state === 'idle') NProgress.done();
   }, [state]);
+
+  return null;
 }
