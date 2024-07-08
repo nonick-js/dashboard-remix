@@ -1,9 +1,17 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet, json } from '@remix-run/react';
+import { Outlet, type ShouldRevalidateFunctionArgs, json } from '@remix-run/react';
 import { auth } from '~/.server/auth';
 import { getMutualManagedGuilds } from '~/.server/discord';
 import { Navbar } from './navbar';
 import { Sidebar } from './sidebar';
+
+export const shouldRevalidate = ({
+  actionResult,
+  defaultShouldRevalidate,
+}: ShouldRevalidateFunctionArgs) => {
+  if (actionResult) return false;
+  return defaultShouldRevalidate;
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await auth.isAuthenticated(request, { failureRedirect: '/login' });

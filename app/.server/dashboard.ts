@@ -1,8 +1,14 @@
-import { redirect } from '@remix-run/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { Params } from '@remix-run/react';
+import type { APIGuild, APIRole } from 'discord-api-types/v10';
+import type { Model } from 'mongoose';
+import { getValidatedFormData } from 'remix-hook-form';
+import type * as z from 'zod';
+import type { ZodEffects, ZodTypeAny } from 'zod';
 import { Discord } from '~/libs/constants';
 import { Snowflake } from '~/libs/database/zod/discord';
 import { hasPermission } from '~/libs/utils';
-import { auth } from './auth';
+import { type DiscordUser, auth } from './auth';
 import { getGuild, getGuildMember, getRoles } from './discord';
 
 /** 値がSnowflakeの基準を満たしているか確認 */
@@ -11,23 +17,81 @@ export function isSnowflake(id: unknown): id is string {
   return success;
 }
 
-/** ダッシュボードのアクセス権限を持っているか確認（所持していない場合は`/`にリダイレクト）*/
-export async function checkAccessPermission(request: Request, guildId: string) {
-  const user = await auth.isAuthenticated(request, { failureRedirect: '/' });
+type HasAccessPermissonRes =
+  | { ok: false; data?: undefined }
+  | {
+      ok: true;
+      data: { user: DiscordUser; roles: APIRole[]; guild: APIGuild };
+    };
 
-  const guild = await getGuild(guildId, true).catch(() => null);
-  if (!guild) throw redirect('/');
+/** ダッシュボードのアクセス権限を持っているか確認 */
+export async function hasAccessPermission(
+  request: Request,
+  params: Params<string>,
+): Promise<HasAccessPermissonRes> {
+  if (!isSnowflake(params.guildId)) return { ok: false };
 
-  const roles = await getRoles(guildId).catch(() => null);
-  const member = await getGuildMember(guildId, user.id).catch(() => null);
-  if (!roles || !member) throw redirect('/');
+  const user = await auth.isAuthenticated(request);
+  if (!user) return { ok: false };
+
+  const guild = await getGuild(params.guildId, true).catch(() => null);
+  if (!guild) return { ok: false };
+
+  const roles = await getRoles(params.guildId).catch(() => null);
+  const member = await getGuildMember(params.guildId, user.id).catch(() => null);
+  if (!roles || !member) return { ok: false };
 
   const isOwner = guild.owner_id === user.id;
   const hasAdminRole = roles
     .filter((role) => member.roles.includes(role.id))
     .some((role) => hasPermission(role.permissions, Discord.Permissions.ManageGuild));
 
-  if (isOwner || hasAdminRole) return { user, guild, roles };
+  if (isOwner || hasAdminRole) {
+    return {
+      ok: true,
+      data: { user, roles, guild },
+    };
+  }
 
-  throw redirect('/');
+  return { ok: false };
+}
+
+/** 設定モデルを更新 */
+export async function updateConfig(
+  request: Request,
+  params: Params<string>,
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  model: Model<any>,
+  schema: ZodEffects<ZodTypeAny>,
+) {
+  try {
+    if (!isSnowflake(params.guildId)) throw new Error('INVALID_GUILD_ID');
+
+    const { ok } = await hasAccessPermission(request, params);
+    if (!ok) throw new Error('MISSING_PERMISSION');
+
+    const { errors, data } = await getValidatedFormData<z.infer<typeof schema>>(
+      request,
+      zodResolver(schema),
+    );
+    if (errors) throw new Error('INVALID_FORM_DATA');
+
+    await model.findOneAndUpdate(
+      { guildId: params.guildId },
+      { $set: data },
+      { upsert: true, new: true },
+    );
+
+    return {
+      ok: true,
+      message: '設定を保存しました！',
+      data,
+    };
+  } catch (e) {
+    return {
+      ok: false,
+      message: `設定の保存に失敗しました。\n${e}`,
+      data: undefined,
+    };
+  }
 }

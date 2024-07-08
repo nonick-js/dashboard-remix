@@ -10,9 +10,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  if (!isSnowflake(params.guildId)) return redirect('/');
-
-  const { ok, data } = await hasAccessPermission(request, params.guildId);
+  const { ok, data } = await hasAccessPermission(request, params);
   if (!ok) return redirect('/');
 
   const guild = data.guild;

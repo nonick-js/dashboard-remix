@@ -1,0 +1,13 @@
+{
+  "Import zod, model, and schema": {
+    "prefix": "importzms",
+		"scope": "typescript,typescriptreact,javascript,javascriptreact",
+    "body": [
+      "import type * as z from 'zod';",
+      "import * as model from '~/libs/database/models';",
+      "import * as schema from '~/libs/database/zod/config';",
+      "$0"
+    ],
+    "description": "Imports zod, model, and schema from the specified paths."
+  }
+}

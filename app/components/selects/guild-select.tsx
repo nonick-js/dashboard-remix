@@ -1,5 +1,3 @@
-'use client';
-
 import { Avatar } from '@nextui-org/avatar';
 import { Chip } from '@nextui-org/chip';
 import { Select, SelectItem, type SelectProps, type SelectedItems } from '@nextui-org/react';
@@ -7,10 +5,14 @@ import type { APIGuild, RESTAPIPartialCurrentUserGuild } from 'discord-api-types
 import React from 'react';
 import { Discord } from '~/libs/constants';
 
-export type GuildSelectProps = {
+type GuildSelectProps = {
   guilds: (APIGuild | RESTAPIPartialCurrentUserGuild)[];
 } & Omit<SelectProps, 'items' | 'children' | 'isMultiline'>;
 
+/**
+ * サーバーを選択するコンポーネント
+ * @see https://nextui.org/docs/components/select
+ */
 const GuildSelect = React.forwardRef<HTMLSelectElement, GuildSelectProps>(
   (
     {
@@ -61,6 +63,10 @@ const GuildSelect = React.forwardRef<HTMLSelectElement, GuildSelectProps>(
 
 GuildSelect.displayName = 'GuildSelect';
 
+/**
+ * {@link https://nextui.org/docs/components/select#select-events selectionMode}が
+ * `single`の場合の`renderValue`に使用するコンポーネント
+ */
 function SingleSelectItem({ guild }: { guild: APIGuild | RESTAPIPartialCurrentUserGuild }) {
   return (
     <div className='flex items-center gap-3 text-foreground'>
@@ -77,6 +83,10 @@ function SingleSelectItem({ guild }: { guild: APIGuild | RESTAPIPartialCurrentUs
   );
 }
 
+/**
+ * {@link https://nextui.org/docs/components/select#select-events selectionMode}が
+ * `multiple`の場合の`renderValue`に使用するコンポーネント
+ */
 function MultipleSelectItem({ guild }: { guild: APIGuild | RESTAPIPartialCurrentUserGuild }) {
   return (
     <Chip
