@@ -9,13 +9,13 @@ import {
   type ScrollShadowProps,
   cn,
 } from '@nextui-org/react';
-import { Link, useLocation, useNavigate, useParams } from '@remix-run/react';
+import { Link, useLoaderData, useLocation, useNavigate, useParams } from '@remix-run/react';
 import { createContext, useContext } from 'react';
-import { GuildSelect } from '~/components/guild-select';
 import { Logo } from '~/components/logo';
+import { GuildSelect } from '~/components/selects/guild-select';
 import DashboardConfig from '~/config/dashboard';
 import type { NavigationItemConfig } from '~/types/config';
-import { LoaderDataContext } from './contexts';
+import type { loader } from './route';
 
 const NavigationEventContext = createContext<(() => void) | undefined>(() => {});
 
@@ -38,7 +38,7 @@ export function Sidebar({
             <Logo height={18} />
           </Link>
         </div>
-        <div className='flex flex-col gap-4'>
+        <div className='flex flex-col gap-3'>
           <SidebarGuildSelect />
           <SidebarNavigation />
         </div>
@@ -52,7 +52,7 @@ export function Sidebar({
  * （サーバーを選択するとそのサーバーのダッシュボードページに移動）
  */
 function SidebarGuildSelect() {
-  const { guilds } = useContext(LoaderDataContext);
+  const { guilds } = useLoaderData<typeof loader>();
   const onNavigate = useContext(NavigationEventContext);
   const { guildId } = useParams();
   const navigate = useNavigate();
@@ -89,7 +89,7 @@ function SidebarNavigation() {
           {NavigationConfig.sections?.map((section) => (
             <AccordionItem
               classNames={{
-                trigger: 'py-3 px-2',
+                trigger: 'py-3 px-1 rounded-md',
                 title: 'text-sm text-default-500 font-bold',
                 content: 'p-0',
               }}
@@ -113,7 +113,7 @@ function SidebarNavigationListBox({ items }: { items: NavigationItemConfig[] }) 
   const onNavigate = useContext(NavigationEventContext);
 
   return (
-    <Listbox classNames={{ base: 'px-2 py-1' }} aria-label='ナビゲーションメニュー'>
+    <Listbox classNames={{ base: 'p-1' }} aria-label='ナビゲーションメニュー'>
       {items.map((item) => {
         const href = `/guilds/${guildId}/${item.path}`;
         const isSamePath = location.pathname === href || `${location.pathname}/` === href;
@@ -122,7 +122,7 @@ function SidebarNavigationListBox({ items }: { items: NavigationItemConfig[] }) 
           <ListboxItem
             onClick={onNavigate}
             classNames={{
-              base: cn('px-3 py-0 h-[40px] data-[hover=true]:bg-default-300/40', {
+              base: cn('px-3 py-0 h-[40px] data-[hover=true]:bg-default-300/40 gap-3', {
                 'bg-default-300/40': isSamePath,
               }),
             }}
@@ -130,9 +130,8 @@ function SidebarNavigationListBox({ items }: { items: NavigationItemConfig[] }) 
             key={item.path}
             aria-label={item.label}
             textValue={item.path}
-            startContent={<Icon icon={item.icon} className='text-[20px]' />}
+            startContent={<Icon icon={item.icon} className='text-[22px]' />}
             endContent={item.chipLabel && <Chip size='sm'>{item.chipLabel}</Chip>}
-            isReadOnly={isSamePath}
           >
             {item.label}
           </ListboxItem>

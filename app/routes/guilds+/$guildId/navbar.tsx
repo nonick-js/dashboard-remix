@@ -1,16 +1,15 @@
 import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
 import { NavbarBrand, NavbarContent, Navbar as NextUINavbar } from '@nextui-org/navbar';
 import { Button, Modal, ModalContent, useDisclosure } from '@nextui-org/react';
-import { Link } from '@remix-run/react';
-import { useContext } from 'react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { Logo } from '~/components/logo';
 import { ThemeToggle } from '~/components/theme-toggle';
 import { UserDropdown } from '~/components/user-dropdown';
-import { LoaderDataContext } from './contexts';
+import type { loader } from './route';
 import { Sidebar } from './sidebar';
 
 export function Navbar() {
-  const { user } = useContext(LoaderDataContext);
+  const { user } = useLoaderData<typeof loader>();
 
   return (
     <NextUINavbar maxWidth='xl' classNames={{ base: 'h-20', wrapper: 'px-0' }}>

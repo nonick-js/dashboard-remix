@@ -1,8 +1,7 @@
 import type { LoaderFunctionArgs } from '@remix-run/node';
-import { Outlet, json, useLoaderData } from '@remix-run/react';
+import { Outlet, json } from '@remix-run/react';
 import { auth } from '~/.server/auth';
 import { getMutualManagedGuilds } from '~/.server/discord';
-import { LoaderDataContext } from './contexts';
 import { Navbar } from './navbar';
 import { Sidebar } from './sidebar';
 
@@ -17,19 +16,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function Layout() {
-  const { user, guilds } = useLoaderData<typeof loader>();
-
   return (
-    <LoaderDataContext.Provider value={{ user, guilds }}>
-      <div className='container flex gap-8'>
-        <Sidebar className='sticky top-0 max-lg:hidden' />
-        <div className='flex-1'>
-          <Navbar />
-          <div className='flex flex-col gap-6'>
-            <Outlet />
-          </div>
+    <div className='container flex gap-8'>
+      <Sidebar className='sticky top-0 max-lg:hidden' />
+      <div className='flex-1'>
+        <Navbar />
+        <div className='flex flex-col gap-6'>
+          <Outlet />
         </div>
       </div>
-    </LoaderDataContext.Provider>
+    </div>
   );
 }
