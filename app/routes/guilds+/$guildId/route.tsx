@@ -1,18 +1,12 @@
-import type { LoaderFunction } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import { Outlet, json, useLoaderData } from '@remix-run/react';
-import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
-import { type DiscordUser, auth } from '~/.server/auth';
+import { auth } from '~/.server/auth';
 import { getMutualManagedGuilds } from '~/.server/discord';
 import { LoaderDataContext } from './contexts';
 import { Navbar } from './navbar';
 import { Sidebar } from './sidebar';
 
-export type LoaderResult = {
-  user: DiscordUser;
-  guilds: RESTAPIPartialCurrentUserGuild[];
-};
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await auth.isAuthenticated(request, { failureRedirect: '/login' });
   const guilds = await getMutualManagedGuilds(user.accessToken);
 
@@ -23,12 +17,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Layout() {
-  const { user, guilds } = useLoaderData<LoaderResult>();
+  const { user, guilds } = useLoaderData<typeof loader>();
 
   return (
     <LoaderDataContext.Provider value={{ user, guilds }}>
       <div className='container flex gap-8'>
-        <Sidebar className='sticky max-lg:hidden' />
+        <Sidebar className='sticky top-0 max-lg:hidden' />
         <div className='flex-1'>
           <Navbar />
           <div className='flex flex-col gap-6'>

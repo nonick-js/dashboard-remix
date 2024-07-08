@@ -1,15 +1,7 @@
-import type { HeadersFunction, LoaderFunction } from '@remix-run/node';
-import {
-  Await,
-  type MetaFunction,
-  defer,
-  json,
-  useLoaderData,
-  useRouteError,
-} from '@remix-run/react';
-import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
+import type { LoaderFunctionArgs } from '@remix-run/node';
+import { Await, type MetaFunction, defer, useLoaderData, useRouteError } from '@remix-run/react';
 import { Suspense, useState } from 'react';
-import { type DiscordUser, auth } from '~/.server/auth';
+import { auth } from '~/.server/auth';
 import { getMutualManagedGuilds } from '~/.server/discord';
 import { ErrorAlert } from '~/components/error-alert';
 import { Header, HeaderDescription, HeaderTitle } from '~/components/header';
@@ -18,16 +10,11 @@ import { GuildList, GuildListSkeleton } from './guild-list';
 import { Navbar } from './navbar';
 import { Toolbar, ToolbarSkeleton } from './toolbar';
 
-type LoaderData = {
-  user: DiscordUser;
-  guilds: RESTAPIPartialCurrentUserGuild[];
-};
-
 export const meta: MetaFunction = () => {
   return [{ title: 'サーバー選択 - NoNICK.js' }];
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await auth.isAuthenticated(request, { failureRedirect: '/login' });
   const guildsPromise = getMutualManagedGuilds(user.accessToken);
 
@@ -35,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function DashboardPage() {
-  const { user, guilds } = useLoaderData<LoaderData>();
+  const { user, guilds } = useLoaderData<typeof loader>();
   const [value, setValue] = useState('');
 
   return (

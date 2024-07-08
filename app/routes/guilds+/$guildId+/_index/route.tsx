@@ -1,28 +1,27 @@
 import { Code } from '@nextui-org/react';
-import { type LoaderFunction, json, redirect } from '@remix-run/node';
+import { type LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import { type MetaFunction, useLoaderData } from '@remix-run/react';
-import type { APIGuild } from 'discord-api-types/v10';
-import { checkAccessPermission, isSnowflake } from '~/.server/dashboard';
+import { hasAccessPermission, isSnowflake } from '~/.server/dashboard';
 import { Alert, AlertTitle } from '~/components/ui/alert';
 import { GuildInfoCard } from './guild-info';
-
-type LoaderData = {
-  guild: APIGuild;
-};
 
 export const meta: MetaFunction = () => {
   return [{ title: 'ダッシュボード - NoNICK.js' }];
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   if (!isSnowflake(params.guildId)) return redirect('/');
-  const { user, guild } = await checkAccessPermission(request, params.guildId);
 
-  return json({ user, guild }, { headers: { 'Cache-Control': 'no-store' } });
+  const { ok, data } = await hasAccessPermission(request, params.guildId);
+  if (!ok) return redirect('/');
+
+  const guild = data.guild;
+
+  return json({ guild }, { headers: { 'Cache-Control': 'no-store' } });
 };
 
 export default function Page() {
-  const { guild } = useLoaderData<LoaderData>();
+  const { guild } = useLoaderData<typeof loader>();
 
   return (
     <>
