@@ -1,20 +1,71 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Switch } from '@nextui-org/react';
+import { type ActionFunctionArgs, type LoaderFunctionArgs, json, redirect } from '@remix-run/node';
+import type { MetaFunction, ShouldRevalidateFunctionArgs } from '@remix-run/react';
 import { Form as RemixForm, useActionData, useLoaderData, useParams } from '@remix-run/react';
 import { ChannelType } from 'discord-api-types/v10';
 import { useWatch } from 'react-hook-form';
 import { RemixFormProvider, useRemixForm, useRemixFormContext } from 'remix-hook-form';
 import type * as z from 'zod';
+import { hasAccessPermission, updateConfig } from '~/.server/dashboard';
+import { getChannels } from '~/.server/discord';
 import { FormActionButtons, FormCard, FormSelectClassNames } from '~/components/form-utils';
+import { Header, HeaderDescription, HeaderTitle } from '~/components/header';
 import { ChannelSelect } from '~/components/selects/channel-select';
 import { RoleSelect } from '~/components/selects/role-select';
 import { FormControl, FormField, FormItem, FormLabel } from '~/components/ui/form';
-import { useFormGuard } from '~/hooks/form-guard';
 import { useFormRevalidate } from '~/hooks/form-revalidate';
 import { useFormToast } from '~/hooks/form-toast';
+import * as model from '~/libs/database/models';
 import * as schema from '~/libs/database/zod/config';
-import type { action, loader } from './route';
 
+// #region Page
+export const meta: MetaFunction = () => {
+  return [{ title: 'サーバー内通報 - NoNICK.js' }];
+};
+
+export const shouldRevalidate = ({
+  actionResult,
+  defaultShouldRevalidate,
+}: ShouldRevalidateFunctionArgs) => {
+  if (actionResult) return false;
+  return defaultShouldRevalidate;
+};
+
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const { ok, data } = await hasAccessPermission(request, params);
+  if (!ok) return redirect('/');
+
+  const roles = data.roles;
+  const [channels, config] = await Promise.all([
+    getChannels(data.guild.id),
+    model.ReportConfig.findOne({ guildId: data.guild.id }),
+  ]);
+
+  return json({ roles, channels, config }, { headers: { 'Cache-Control': 'no-store' } });
+};
+
+export const action = async ({ request, params }: ActionFunctionArgs) => {
+  const res = await updateConfig(request, params, model.ReportConfig, schema.ReportConfig);
+  return json(res);
+};
+
+export default function Page() {
+  return (
+    <>
+      <Header>
+        <HeaderTitle>サーバー内通報</HeaderTitle>
+        <HeaderDescription>
+          不適切なメッセージやユーザーをメンバーが通報できるようにします。
+        </HeaderDescription>
+      </Header>
+      <Form />
+    </>
+  );
+}
+// #endregion
+
+// #region Form
 type Config = z.infer<typeof schema.ReportConfig>;
 
 export function Form() {
@@ -38,7 +89,6 @@ export function Form() {
 
   useFormRevalidate(form.reset, !!actionData?.ok, actionData?.data);
   useFormToast(actionData);
-  useFormGuard(form.formState.isDirty);
 
   return (
     <RemixFormProvider {...form}>
@@ -175,3 +225,4 @@ function NotificationConfigForm() {
     </FormCard>
   );
 }
+// #endregion
