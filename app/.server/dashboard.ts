@@ -4,7 +4,7 @@ import type { APIGuild, APIRole } from 'discord-api-types/v10';
 import type { Model } from 'mongoose';
 import { getValidatedFormData } from 'remix-hook-form';
 import type * as z from 'zod';
-import type { ZodEffects, ZodTypeAny } from 'zod';
+import type { ZodEffects, ZodObject, ZodTypeAny } from 'zod';
 import { Discord } from '~/libs/constants';
 import { Snowflake } from '~/libs/database/zod/discord';
 import { hasPermission } from '~/libs/utils';
@@ -37,9 +37,14 @@ export async function hasAccessPermission(
   const guild = await getGuild(params.guildId, true).catch(() => null);
   if (!guild) return { ok: false };
 
-  const roles = await getRoles(params.guildId).catch(() => null);
-  const member = await getGuildMember(params.guildId, user.id).catch(() => null);
-  if (!roles || !member) return { ok: false };
+  const res = await Promise.all([
+    getRoles(params.guildId),
+    getGuildMember(params.guildId, user.id),
+  ]).catch(() => null);
+
+  if (!res) return { ok: false };
+
+  const [roles, member] = res;
 
   const isOwner = guild.owner_id === user.id;
   const hasAdminRole = roles
@@ -62,7 +67,8 @@ export async function updateConfig(
   params: Params<string>,
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   model: Model<any>,
-  schema: ZodEffects<ZodTypeAny>,
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  schema: ZodEffects<ZodTypeAny> | ZodObject<any>,
 ) {
   try {
     if (!isSnowflake(params.guildId)) throw new Error('INVALID_GUILD_ID');

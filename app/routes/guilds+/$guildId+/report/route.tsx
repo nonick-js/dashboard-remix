@@ -23,9 +23,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { ok, data } = await hasAccessPermission(request, params);
   if (!ok) return redirect('/');
 
-  const channels = await getChannels(data.guild.id);
-  const config = await model.ReportConfig.findOne({ guildId: params.guildId });
   const roles = data.roles;
+  const [channels, config] = await Promise.all([
+    getChannels(data.guild.id),
+    model.ReportConfig.findOne({ guildId: params.guildId }),
+  ]);
 
   return json({ roles, channels, config }, { headers: { 'Cache-Control': 'no-store' } });
 };
