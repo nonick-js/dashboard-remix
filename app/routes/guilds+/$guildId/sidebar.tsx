@@ -78,7 +78,7 @@ function SidebarNavigation() {
 
   return (
     <div className='flex flex-col pb-3'>
-      <SidebarNavigationListBox items={NavigationConfig.items} />
+      <SidebarNavigationListBox items={NavigationConfig.items} key='non-category' />
       {NavigationConfig.sections && (
         <Accordion
           className='px-0'
@@ -89,7 +89,8 @@ function SidebarNavigation() {
           {NavigationConfig.sections?.map((section) => (
             <AccordionItem
               classNames={{
-                trigger: 'py-3 px-1 rounded-md',
+                heading: 'px-1',
+                trigger: 'py-3 px-0 rounded-md',
                 title: 'text-sm text-default-500 font-bold',
                 content: 'p-0',
               }}
@@ -98,7 +99,7 @@ function SidebarNavigation() {
               key={section.key}
               textValue={section.key}
             >
-              <SidebarNavigationListBox items={section.items} />
+              <SidebarNavigationListBox key={section.key} items={section.items} />
             </AccordionItem>
           ))}
         </Accordion>
