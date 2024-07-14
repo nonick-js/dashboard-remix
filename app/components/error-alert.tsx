@@ -1,4 +1,4 @@
-import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
+import { Icon } from '@iconify/react';
 import { Button } from '@nextui-org/react';
 import { isRouteErrorResponse, useLocation, useNavigate } from '@remix-run/react';
 

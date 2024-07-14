@@ -1,4 +1,4 @@
-import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
+import { Icon } from '@iconify/react';
 import { type VariantProps, cn, tv } from '@nextui-org/theme';
 import React, { type HTMLAttributes } from 'react';
 

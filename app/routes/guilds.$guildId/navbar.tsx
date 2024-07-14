@@ -1,4 +1,4 @@
-import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
+import { Icon } from '@iconify/react';
 import { NavbarBrand, NavbarContent, Navbar as NextUINavbar } from '@nextui-org/navbar';
 import { Button, Modal, ModalContent, useDisclosure } from '@nextui-org/react';
 import { Link, useLoaderData } from '@remix-run/react';

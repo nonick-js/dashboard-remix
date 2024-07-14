@@ -1,4 +1,4 @@
-import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
+import { Icon } from '@iconify/react';
 import { Avatar, Card, type CardProps, Divider, Snippet, cn } from '@nextui-org/react';
 import { type APIGuild, GuildFeature } from 'discord-api-types/v10';
 import { type Snowflake, getDate } from 'discord-snowflake';

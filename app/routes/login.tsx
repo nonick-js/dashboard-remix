@@ -1,4 +1,4 @@
-import { Icon } from '@iconify-icon/react/dist/iconify.js';
+import { Icon } from '@iconify/react';
 import { Button, Card, Link } from '@nextui-org/react';
 import type { LoaderFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { Form, type MetaFunction } from '@remix-run/react';

@@ -14,9 +14,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.52.1(react@18.3.1))
-      '@iconify-icon/react':
-        specifier: ^2.1.0
-        version: 2.1.0(react@18.3.1)
+      '@iconify/react':
+        specifier: ^5.0.1
+        version: 5.0.1(react@18.3.1)
       '@nextui-org/react':
         specifier: ^2.4.2
         version: 2.4.2(@types/react@18.3.3)(framer-motion@11.2.12(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(tailwindcss@3.4.4)
@@ -690,8 +690,8 @@ packages:
     peerDependencies:
       react-hook-form: ^7.0.0
 
-  '@iconify-icon/react@2.1.0':
-    resolution: {integrity: sha512-OuEsW5Y474rg3WlseLFQ0uuJjnyk1DhLN1Ire5JGjF4sF8/rNxGJDLSItEogRcKuUbL+zzuoBsaTUVVInuixRA==}
+  '@iconify/react@5.0.1':
+    resolution: {integrity: sha512-octpAJRtHZLLS1o6fmz2Ek2Rfwx75kVg48MZyGTqL3QqoxRddEsuLqOt6ADDhRosmlrYnIrVL+7obo1bz2ikNw==}
     peerDependencies:
       react: '>=16'
 
@@ -2635,9 +2635,6 @@ packages:
   human-signals@2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
-
-  iconify-icon@2.1.0:
-    resolution: {integrity: sha512-lto4XU3bwTQnb+D/CsJ4dWAo0aDe+uPMxEtxyOodw9l7R9QnJUUab3GCehlw2M8mDHdeUu/ufx8PvRQiJphhXg==}
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -4788,9 +4785,9 @@ snapshots:
     dependencies:
       react-hook-form: 7.52.1(react@18.3.1)
 
-  '@iconify-icon/react@2.1.0(react@18.3.1)':
+  '@iconify/react@5.0.1(react@18.3.1)':
     dependencies:
-      iconify-icon: 2.1.0
+      '@iconify/types': 2.0.0
       react: 18.3.1
 
   '@iconify/types@2.0.0': {}
@@ -7688,10 +7685,6 @@ snapshots:
       toidentifier: 1.0.1
 
   human-signals@2.1.0: {}
-
-  iconify-icon@2.1.0:
-    dependencies:
-      '@iconify/types': 2.0.0
 
   iconv-lite@0.4.24:
     dependencies:
