@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify-icon/react/dist/iconify.js';
 import { Button, Input, Skeleton, Tooltip } from '@nextui-org/react';
 import { useRevalidator } from '@remix-run/react';
 import { useContext } from 'react';

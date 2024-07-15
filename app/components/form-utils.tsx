@@ -1,5 +1,5 @@
 import { DevTool } from '@hookform/devtools';
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
 import { Button, Card, CardBody, CardHeader, cn } from '@nextui-org/react';
 import { useActionData, useNavigation } from '@remix-run/react';
 import { type ReactNode, useEffect } from 'react';

@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
 import { Chip } from '@nextui-org/chip';
 import { Select, SelectItem, type SelectProps, type SelectedItems } from '@nextui-org/select';
 import { type APIGuildChannel, ChannelType, type GuildChannelType } from 'discord-api-types/v10';

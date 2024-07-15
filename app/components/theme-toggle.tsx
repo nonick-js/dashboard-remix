@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify-icon/react';
 import { Button, type ButtonProps } from '@nextui-org/react';
 import { useTheme } from 'next-themes';
 

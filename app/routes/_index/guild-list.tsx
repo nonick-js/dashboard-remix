@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import { Icon } from '@iconify-icon/react/dist/iconify.js';
 import { cn } from '@nextui-org/react';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10';
 import { useContext } from 'react';
