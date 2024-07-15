@@ -1,14 +1,9 @@
 import { useNavigation } from '@remix-run/react';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import type { ActionResult } from '~/types';
 
-type FormActionRes = {
-  ok: boolean;
-  message: string;
-  data?: unknown;
-};
-
-export const useFormToast = (data?: FormActionRes) => {
+export const useFormToast = (data?: ActionResult) => {
   const navigation = useNavigation();
 
   useEffect(() => {

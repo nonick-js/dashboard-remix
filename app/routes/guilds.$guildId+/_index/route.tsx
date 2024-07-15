@@ -9,8 +9,8 @@ export const meta: MetaFunction = () => {
   return [{ title: 'ダッシュボード - NoNICK.js' }];
 };
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { ok, data } = await hasAccessPermission(request, params);
+export const loader = async (args: LoaderFunctionArgs) => {
+  const { ok, data } = await hasAccessPermission(args);
   if (!ok) return redirect('/');
 
   const guild = data.guild;

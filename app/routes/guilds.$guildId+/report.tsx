@@ -14,7 +14,7 @@ import { Header, HeaderDescription, HeaderTitle } from '~/components/header';
 import { ChannelSelect } from '~/components/selects/channel-select';
 import { RoleSelect } from '~/components/selects/role-select';
 import { FormControl, FormField, FormItem, FormLabel } from '~/components/ui/form';
-import { useFormRevalidate } from '~/hooks/form-revalidate';
+import { useFormReset } from '~/hooks/form-revalidate';
 import { useFormToast } from '~/hooks/form-toast';
 import * as model from '~/libs/database/models';
 import * as schema from '~/libs/database/zod/config';
@@ -32,8 +32,8 @@ export const shouldRevalidate = ({
   return defaultShouldRevalidate;
 };
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { ok, data } = await hasAccessPermission(request, params);
+export const loader = async (args: LoaderFunctionArgs) => {
+  const { ok, data } = await hasAccessPermission(args);
   if (!ok) return redirect('/');
 
   const roles = data.roles;
@@ -45,8 +45,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return json({ roles, channels, config }, { headers: { 'Cache-Control': 'no-store' } });
 };
 
-export const action = async ({ request, params }: ActionFunctionArgs) => {
-  const res = await updateConfig(request, params, model.ReportConfig, schema.ReportConfig);
+export const action = async (args: ActionFunctionArgs) => {
+  const res = await updateConfig(args, model.ReportConfig, schema.ReportConfig);
   return json(res);
 };
 
@@ -87,7 +87,7 @@ export function Form() {
     },
   });
 
-  useFormRevalidate(form.reset, !!actionData?.ok, actionData?.data);
+  useFormReset(form.reset, actionData);
   useFormToast(actionData);
 
   return (
