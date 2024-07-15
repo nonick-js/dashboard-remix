@@ -157,11 +157,11 @@ function LogConfigForm({
       <FormField
         control={form.control}
         name={`${name}.enabled`}
-        render={({ field: { ref, onChange, value } }) => (
+        render={({ field: { ref, onChange, onBlur, value } }) => (
           <FormItem dir='row'>
             <FormLabel title={labelTitle} description={labelDescription} />
             <FormControl ref={ref}>
-              <Switch onChange={onChange} isSelected={value} />
+              <Switch onChange={onChange} onBlur={onBlur} isSelected={value} />
             </FormControl>
           </FormItem>
         )}

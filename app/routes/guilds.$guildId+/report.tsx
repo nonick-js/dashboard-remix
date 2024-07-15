@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Switch } from '@nextui-org/react';
 import { type ActionFunctionArgs, type LoaderFunctionArgs, json, redirect } from '@remix-run/node';
-import type { MetaFunction, ShouldRevalidateFunctionArgs } from '@remix-run/react';
+import type { MetaFunction, ShouldRevalidateFunction } from '@remix-run/react';
 import { Form as RemixForm, useActionData, useLoaderData, useParams } from '@remix-run/react';
 import { ChannelType } from 'discord-api-types/v10';
 import { useWatch } from 'react-hook-form';
@@ -24,10 +24,10 @@ export const meta: MetaFunction = () => {
   return [{ title: 'サーバー内通報 - NoNICK.js' }];
 };
 
-export const shouldRevalidate = ({
+export const shouldRevalidate: ShouldRevalidateFunction = ({
   actionResult,
   defaultShouldRevalidate,
-}: ShouldRevalidateFunctionArgs) => {
+}) => {
   if (actionResult) return false;
   return defaultShouldRevalidate;
 };
