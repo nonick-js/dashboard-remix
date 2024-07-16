@@ -13,8 +13,8 @@ import { type DiscordUser, auth } from './auth';
 import { getGuild, getGuildMember, getRoles } from './discord';
 
 type HasAccessPermissonRes =
-  | { ok: true; data: { user: DiscordUser; roles: APIRole[]; guild: APIGuild } }
-  | { ok: false; data?: undefined };
+  | { ok: true; data: { user: DiscordUser; roles: APIRole[]; guild: APIGuild }; error?: undefined }
+  | { ok: false; data?: undefined; error: string };
 
 /** 値がSnowflakeの基準を満たしているか確認 */
 export function isSnowflake(id: unknown): id is string {
@@ -27,10 +27,10 @@ export async function hasAccessPermission(
   args: LoaderFunctionArgs | ActionFunctionArgs,
 ): Promise<HasAccessPermissonRes> {
   try {
-    if (!isSnowflake(args.params.guildId)) throw new Error();
+    if (!isSnowflake(args.params.guildId)) throw new Error('Invalid GuildId');
 
     const user = await auth.isAuthenticated(args.request);
-    if (!user) throw new Error();
+    if (!user) throw new Error('Unauthorized');
 
     const guild = await getGuild(args.params.guildId, true);
 
@@ -53,9 +53,9 @@ export async function hasAccessPermission(
       };
     }
 
-    return { ok: false };
-  } catch {
-    return { ok: false };
+    return { ok: false, error: 'Missing Permissions' };
+  } catch (e) {
+    return { ok: false, error: String(e) };
   }
 }
 
@@ -67,22 +67,18 @@ export async function updateConfig(
   schema: ZodEffects<ZodTypeAny> | ZodObject<ZodRawShape>,
 ): Promise<ActionResult> {
   try {
-    const { ok } = await hasAccessPermission(args);
-    if (!ok) throw new Error('MISSING_PERMISSION');
+    const { ok, error } = await hasAccessPermission(args);
+    if (!ok) throw new Error(error);
 
     const { errors, data } = await getValidatedFormData<z.infer<typeof schema>>(
       args.request,
       zodResolver(schema),
     );
-    if (errors) throw new Error('INVALID_FORM_DATA');
+    if (errors) throw new Error('Invalid Form Data');
 
-    const res = await model.findOneAndUpdate(
-      { guildId: args.params.guildId },
-      { $set: data },
-      { upsert: true, new: true },
-    );
+    await model.updateOne({ guildId: args.params.guildId }, { $set: data }, { upsert: true });
 
-    return { ok: true, message: '設定を保存しました！', data: res };
+    return { ok: true, message: '設定を保存しました！' };
   } catch (e) {
     return { ok: false, message: `設定の保存に失敗しました。\n${e}` };
   }

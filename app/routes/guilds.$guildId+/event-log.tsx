@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Switch } from '@nextui-org/react';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import type { MetaFunction, ShouldRevalidateFunction } from '@remix-run/react';
+import type { MetaFunction } from '@remix-run/react';
 import {
   Form as RemixForm,
   json,
@@ -30,14 +30,6 @@ export const meta: MetaFunction = () => {
   return [{ title: 'イベントログ - NoNICK.js' }];
 };
 
-export const shouldRevalidate: ShouldRevalidateFunction = ({
-  actionResult,
-  defaultShouldRevalidate,
-}) => {
-  if (actionResult) return false;
-  return defaultShouldRevalidate;
-};
-
 export const loader = async (args: LoaderFunctionArgs) => {
   const { ok, data } = await hasAccessPermission(args);
   if (!ok) return redirect('/');
@@ -47,7 +39,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
     model.EventLogConfig.findOne({ guildId: data.guild.id }),
   ]);
 
-  return json({ channels, config }, { headers: { 'Cache-Control': 'no-store' } });
+  return json({ channels, config: config?.toJSON() }, { headers: { 'Cache-Control': 'no-store' } });
 };
 
 export const action = async (args: ActionFunctionArgs) => {
@@ -72,7 +64,7 @@ export default function Page() {
 type Config = z.infer<typeof schema.EventLogConfig>;
 
 export function Form() {
-  const actionData = useActionData<typeof action>();
+  const actionResult = useActionData<typeof action>();
   const { config } = useLoaderData<typeof loader>();
   const { guildId } = useParams();
 
@@ -89,8 +81,8 @@ export function Form() {
     },
   });
 
-  useFormReset(form.reset, actionData);
-  useFormToast(actionData);
+  useFormReset(form.reset, config, actionResult);
+  useFormToast(actionResult);
 
   return (
     <RemixFormProvider {...form}>
