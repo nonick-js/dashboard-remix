@@ -5,7 +5,7 @@
     "body": [
       "import type * as z from 'zod';",
       "import * as model from '~/libs/database/models';",
-      "import * as schema from '~/libs/database/zod/config';",
+      "import * as schema from '~/libs/database/zod';",
       "$0"
     ],
     "description": "Imports zod, model, and schema from the specified paths."

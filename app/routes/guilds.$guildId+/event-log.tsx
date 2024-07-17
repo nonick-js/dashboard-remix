@@ -2,18 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Switch } from '@nextui-org/react';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import type { MetaFunction } from '@remix-run/react';
-import {
-  Form as RemixForm,
-  json,
-  redirect,
-  useActionData,
-  useLoaderData,
-  useParams,
-} from '@remix-run/react';
+import { Form as RemixForm, json, redirect, useActionData, useLoaderData } from '@remix-run/react';
 import { ChannelType } from 'discord-api-types/v10';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { RemixFormProvider, useRemixForm } from 'remix-hook-form';
-import type * as z from 'zod';
+import type { z } from 'zod';
 import { hasAccessPermission, updateConfig } from '~/.server/dashboard';
 import { getChannels } from '~/.server/discord';
 import { FormActionButtons, FormCard, FormSelectClassNames } from '~/components/form-utils';
@@ -23,7 +16,7 @@ import { FormControl, FormField, FormItem, FormLabel } from '~/components/ui/for
 import { useFormReset } from '~/hooks/form-revalidate';
 import { useFormToast } from '~/hooks/form-toast';
 import * as model from '~/libs/database/models';
-import * as schema from '~/libs/database/zod/config';
+import * as schema from '~/libs/database/zod';
 
 // #region Page
 export const meta: MetaFunction = () => {
@@ -66,12 +59,10 @@ type Config = z.infer<typeof schema.EventLogConfig>;
 export function Form() {
   const actionResult = useActionData<typeof action>();
   const { config } = useLoaderData<typeof loader>();
-  const { guildId } = useParams();
 
   const form = useRemixForm<Config>({
     resolver: zodResolver(schema.EventLogConfig),
     defaultValues: config ?? {
-      guildId,
       timeout: { enabled: false, channel: null },
       kick: { enabled: false, channel: null },
       ban: { enabled: false, channel: null },

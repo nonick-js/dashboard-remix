@@ -6,7 +6,7 @@ import { Form as RemixForm, useActionData, useLoaderData, useParams } from '@rem
 import { ChannelType } from 'discord-api-types/v10';
 import { useWatch } from 'react-hook-form';
 import { RemixFormProvider, useRemixForm, useRemixFormContext } from 'remix-hook-form';
-import type * as z from 'zod';
+import type { z } from 'zod';
 import { hasAccessPermission, updateConfig } from '~/.server/dashboard';
 import { getChannels } from '~/.server/discord';
 import { FormActionButtons, FormCard, FormSelectClassNames } from '~/components/form-utils';
@@ -17,7 +17,7 @@ import { FormControl, FormField, FormItem, FormLabel } from '~/components/ui/for
 import { useFormReset } from '~/hooks/form-revalidate';
 import { useFormToast } from '~/hooks/form-toast';
 import * as model from '~/libs/database/models';
-import * as schema from '~/libs/database/zod/config';
+import * as schema from '~/libs/database/zod';
 
 // #region Page
 export const meta: MetaFunction = () => {
@@ -66,12 +66,10 @@ type Config = z.infer<typeof schema.ReportConfig>;
 export function Form() {
   const actionResult = useActionData<typeof action>();
   const { config } = useLoaderData<typeof loader>();
-  const { guildId } = useParams();
 
   const form = useRemixForm<Config>({
     resolver: zodResolver(schema.ReportConfig),
     defaultValues: config ?? {
-      guildId,
       channel: '',
       includeModerator: false,
       progressButton: true,
@@ -171,7 +169,8 @@ function GeneralConfigForm() {
 function NotificationConfigForm() {
   const { roles } = useLoaderData<typeof loader>();
   const form = useRemixFormContext<Config>();
-  const { mention, guildId } = useWatch<Config>();
+  const { mention } = useWatch<Config>();
+  const { guildId } = useParams();
 
   return (
     <FormCard title='通知設定'>

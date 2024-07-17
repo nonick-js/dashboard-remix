@@ -6,7 +6,7 @@ import { getValidatedFormData } from 'remix-hook-form';
 import type * as z from 'zod';
 import type { ZodEffects, ZodObject, ZodRawShape, ZodTypeAny } from 'zod';
 import { Discord } from '~/libs/constants';
-import { Snowflake } from '~/libs/database/zod/discord';
+import { type BaseConfigSchema, Snowflake } from '~/libs/database/zod/util';
 import { hasPermission } from '~/libs/utils';
 import type { ActionResult } from '~/types';
 import { type DiscordUser, auth } from './auth';
@@ -59,12 +59,13 @@ export async function hasAccessPermission(
   }
 }
 
-/** 設定モデルを更新 */
-export async function updateConfig(
+/** 各機能の設定を更新 */
+export async function updateConfig<
+  T extends ZodEffects<ZodObject<ZodRawShape>> | ZodObject<ZodRawShape>,
+>(
   args: ActionFunctionArgs,
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  model: Model<any>,
-  schema: ZodEffects<ZodTypeAny> | ZodObject<ZodRawShape>,
+  model: Model<z.infer<typeof BaseConfigSchema & T>>,
+  schema: T,
 ): Promise<ActionResult> {
   try {
     const { ok, error } = await hasAccessPermission(args);
@@ -74,9 +75,14 @@ export async function updateConfig(
       args.request,
       zodResolver(schema),
     );
+
     if (errors) throw new Error('Invalid Form Data');
 
-    await model.updateOne({ guildId: args.params.guildId }, { $set: data }, { upsert: true });
+    await model.updateOne(
+      { guildId: args.params.guildId },
+      { $set: { guildId: args.params.guildId, ...data } },
+      { upsert: true },
+    );
 
     return { ok: true, message: '設定を保存しました！' };
   } catch (e) {
