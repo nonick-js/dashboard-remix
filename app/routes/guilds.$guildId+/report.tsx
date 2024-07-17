@@ -35,7 +35,7 @@ export const loader = async (args: LoaderFunctionArgs) => {
   ]);
 
   return json(
-    { roles, channels, config: config?.toJSON() },
+    { roles, channels, config: schema.ReportConfig.parse(config?.toJSON()) },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 };

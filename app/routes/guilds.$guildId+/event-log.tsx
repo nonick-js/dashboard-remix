@@ -32,7 +32,10 @@ export const loader = async (args: LoaderFunctionArgs) => {
     model.EventLogConfig.findOne({ guildId: data.guild.id }),
   ]);
 
-  return json({ channels, config: config?.toJSON() }, { headers: { 'Cache-Control': 'no-store' } });
+  return json(
+    { channels, config: schema.EventLogConfig.parse(config?.toJSON()) },
+    { headers: { 'Cache-Control': 'no-store' } },
+  );
 };
 
 export const action = async (args: ActionFunctionArgs) => {
