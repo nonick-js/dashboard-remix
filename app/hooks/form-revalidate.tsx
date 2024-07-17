@@ -9,7 +9,7 @@ export const useFormReset = (
   /** リセット関数 */
   reset: UseRemixFormReturn['reset'],
   /** リセット後に標準値にする値 */
-  value?: FlattenMaps<unknown>,
+  value: FlattenMaps<unknown> | null,
   /** useActionDataで取得したActionResult */
   actionData?: ActionResult,
 ) => {
@@ -17,7 +17,7 @@ export const useFormReset = (
 
   useEffect(() => {
     if (navigation.state === 'idle' && actionData?.ok) {
-      reset(value);
+      reset(value ?? undefined);
     }
   }, [navigation, reset, actionData, value]);
 };

@@ -31,11 +31,9 @@ export const loader = async (args: LoaderFunctionArgs) => {
     getChannels(data.guild.id),
     model.EventLogConfig.findOne({ guildId: data.guild.id }),
   ]);
+  const parsedConfig = config ? schema.EventLogConfig.parse(config.toJSON()) : null;
 
-  return json(
-    { channels, config: schema.EventLogConfig.parse(config?.toJSON()) },
-    { headers: { 'Cache-Control': 'no-store' } },
-  );
+  return json({ channels, config: parsedConfig }, { headers: { 'Cache-Control': 'no-store' } });
 };
 
 export const action = async (args: ActionFunctionArgs) => {
