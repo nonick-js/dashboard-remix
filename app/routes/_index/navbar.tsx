@@ -6,7 +6,7 @@ import { UserDropdown } from '~/components/user-dropdown';
 
 export function Navbar({ user }: { user?: DiscordUser }) {
   return (
-    <NextUINavbar maxWidth='xl' classNames={{ base: 'h-20' }}>
+    <NextUINavbar classNames={{ base: 'h-20', wrapper: 'max-w-[90rem]' }}>
       <NavbarBrand>
         <Logo height={18} />
       </NavbarBrand>

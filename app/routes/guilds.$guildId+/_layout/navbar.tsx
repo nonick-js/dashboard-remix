@@ -12,7 +12,7 @@ export function Navbar() {
   const { user } = useLoaderData<typeof loader>();
 
   return (
-    <NextUINavbar maxWidth='xl' classNames={{ base: 'h-20', wrapper: 'px-0' }}>
+    <NextUINavbar classNames={{ base: 'h-20', wrapper: 'px-0 max-w-[90rem]' }}>
       <NavbarSidebar />
       <NavbarBrand className='lg:hidden'>
         <Link to='/'>
