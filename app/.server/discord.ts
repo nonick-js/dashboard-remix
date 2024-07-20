@@ -3,6 +3,7 @@ import type {
   APIGuild,
   APIGuildMember,
   APIRole,
+  APIUser,
   RESTAPIPartialCurrentUserGuild,
   RESTRateLimit,
 } from 'discord-api-types/v10';
@@ -45,6 +46,16 @@ export async function getGuildMember(guildId: string, userId: string) {
 
   if (!res.ok) throw new Error(res.statusText);
   return await res.json<APIGuildMember>();
+}
+
+/** Discordユーザーを取得 */
+export async function getUser(userId: string) {
+  const res = await fetchWithDiscordRateLimit(`${Endpoints.API}/users/${userId}`, {
+    headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}` },
+  });
+
+  if (!res.ok) throw new Error(res.statusText);
+  return await res.json<APIUser>();
 }
 
 /** Discordサーバーを取得 */

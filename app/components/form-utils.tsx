@@ -1,11 +1,8 @@
 import { DevTool } from '@hookform/devtools';
 import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
 import { Button, Card, CardBody, CardHeader, cn } from '@nextui-org/react';
-import { useActionData, useNavigation } from '@remix-run/react';
-import { type ReactNode, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import type { ReactNode } from 'react';
 import { useRemixFormContext } from 'remix-hook-form';
-import type { updateConfig } from '~/.server/dashboard';
 
 export const FormSelectClassNames = {
   multiple: {

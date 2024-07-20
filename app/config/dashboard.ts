@@ -10,7 +10,7 @@ const DashboardConfig: DashboardConfigType = {
       },
       {
         label: '監査ログ',
-        icon: 'solar:list-check-bold',
+        icon: 'solar:calendar-search-bold',
         path: 'audit-log',
       },
     ],
