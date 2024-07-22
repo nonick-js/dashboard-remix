@@ -9,15 +9,15 @@ export const useFormReset = (
   /** リセット関数 */
   reset: UseRemixFormReturn['reset'],
   /** リセット後に標準値にする値 */
-  value: FlattenMaps<unknown> | null,
+  value: FlattenMaps<unknown> | undefined,
   /** useActionDataで取得したActionResult */
-  actionData?: ActionResult,
+  actionResult: ActionResult | undefined,
 ) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (navigation.state === 'idle' && actionData?.ok) {
+    if (navigation.state === 'idle' && actionResult?.ok) {
       reset(value ?? undefined);
     }
-  }, [navigation, reset, actionData, value]);
+  }, [navigation, reset, actionResult, value]);
 };

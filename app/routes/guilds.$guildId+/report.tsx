@@ -28,15 +28,14 @@ export const loader = async (args: LoaderFunctionArgs) => {
   const { ok, data } = await hasAccessPermission(args);
   if (!ok) return redirect('/');
 
+  const roles = data.roles;
   const [channels, config] = await Promise.all([
     getChannels(data.guild.id),
     model.ReportConfig.findOne({ guildId: data.guild.id }),
   ]);
-  const roles = data.roles;
-  const parsedConfig = config ? schema.ReportConfig.parse(config.toJSON()) : null;
 
   return json(
-    { channels, roles, config: parsedConfig },
+    { roles, channels, config: schema.ReportConfig.safeParse(config).data },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 };
