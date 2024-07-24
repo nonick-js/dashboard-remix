@@ -57,7 +57,7 @@ export default function Page() {
 // #endregion
 
 // #region Form
-type Config = z.infer<typeof schema.EventLogConfig>;
+type Config = z.input<typeof schema.EventLogConfig>;
 
 export function Form() {
   const actionResult = useActionData<typeof action>();
@@ -80,7 +80,7 @@ export function Form() {
 
   return (
     <RemixFormProvider {...form}>
-      <RemixForm onSubmit={form.handleSubmit} method='post' className='flex flex-col gap-6'>
+      <RemixForm method='post' className='flex flex-col gap-6'>
         <LogConfigForm
           name='timeout'
           cardTitle='タイムアウト'
@@ -135,8 +135,8 @@ function LogConfigForm({
   labelDescription: string;
 }) {
   const { channels } = useLoaderData<typeof loader>();
-  const watch = useWatch<Config>();
   const form = useFormContext<Config>();
+  const disabled = !useWatch<Config>({ name: `${name}.enabled` });
 
   return (
     <FormCard title={cardTitle}>
@@ -146,8 +146,8 @@ function LogConfigForm({
         render={({ field: { ref, onChange, onBlur, value } }) => (
           <FormItem dir='row'>
             <FormLabel title={labelTitle} description={labelDescription} />
-            <FormControl ref={ref}>
-              <Switch onChange={onChange} onBlur={onBlur} isSelected={value} />
+            <FormControl>
+              <Switch ref={ref} onChange={onChange} onBlur={onBlur} isSelected={value} />
             </FormControl>
           </FormItem>
         )}
@@ -157,13 +157,10 @@ function LogConfigForm({
         name={`${name}.channel`}
         render={({ field: { ref, onChange, onBlur, value }, fieldState: { invalid } }) => (
           <FormItem dir='row' mobileDir='col'>
-            <FormLabel
-              title='ログを送信するチャンネル'
-              isDisabled={!watch?.[name]?.enabled}
-              isRequired
-            />
-            <FormControl ref={ref}>
+            <FormLabel title='ログを送信するチャンネル' isDisabled={disabled} isRequired />
+            <FormControl>
               <ChannelSelect
+                ref={ref}
                 classNames={FormSelectClassNames.single}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -171,7 +168,7 @@ function LogConfigForm({
                 channels={channels}
                 types={{ include: [ChannelType.GuildText] }}
                 isInvalid={invalid}
-                isDisabled={!watch?.[name]?.enabled}
+                isDisabled={disabled}
                 disallowEmptySelection
               />
             </FormControl>

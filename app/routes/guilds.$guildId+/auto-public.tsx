@@ -65,7 +65,7 @@ export default function Page() {
 // #endregion
 
 // #region Form
-type Config = z.infer<typeof schema.AutoPublicConfig>;
+type Config = z.input<typeof schema.AutoPublicConfig>;
 
 export function Form() {
   const actionResult = useActionData<typeof action>();
@@ -84,7 +84,7 @@ export function Form() {
 
   return (
     <RemixFormProvider {...form}>
-      <RemixForm onSubmit={form.handleSubmit} method='post' className='flex flex-col gap-6'>
+      <RemixForm method='post' className='flex flex-col gap-6'>
         <EnableConfigForm />
         <GeneralConfigForm />
         <FormActionButtons />
@@ -104,8 +104,8 @@ function EnableConfigForm() {
         render={({ field: { ref, onChange, onBlur, value } }) => (
           <FormItem dir='row'>
             <FormLabel title='自動アナウンス公開を有効にする' />
-            <FormControl ref={ref}>
-              <Switch onChange={onChange} onBlur={onBlur} isSelected={value} />
+            <FormControl>
+              <Switch ref={ref} onChange={onChange} onBlur={onBlur} isSelected={value} />
             </FormControl>
           </FormItem>
         )}
@@ -117,7 +117,7 @@ function EnableConfigForm() {
 function GeneralConfigForm() {
   const form = useFormContext<Config>();
   const { channels } = useLoaderData<typeof loader>();
-  const { enabled } = useWatch<Config>();
+  const disabled = !useWatch<Config>({ name: 'enabled' });
 
   return (
     <FormCard title='全般設定'>
@@ -126,9 +126,10 @@ function GeneralConfigForm() {
         name='channels'
         render={({ field: { ref, onChange, onBlur, value }, fieldState: { invalid } }) => (
           <FormItem dir='row' mobileDir='col'>
-            <FormLabel title='自動公開するチャンネル' isDisabled={!enabled} />
-            <FormControl ref={ref}>
+            <FormLabel title='自動公開するチャンネル' isDisabled={disabled} />
+            <FormControl>
               <ChannelSelect
+                ref={ref}
                 classNames={{
                   trigger: 'py-2',
                   base: 'md:max-w-sm',
@@ -140,7 +141,7 @@ function GeneralConfigForm() {
                 channels={channels}
                 types={{ include: [ChannelType.GuildAnnouncement] }}
                 isInvalid={invalid}
-                isDisabled={!enabled}
+                isDisabled={disabled}
               />
             </FormControl>
           </FormItem>

@@ -61,7 +61,7 @@ export default function Page() {
 // #endregion
 
 // #region Form
-type Config = z.infer<typeof schema.ReportConfig>;
+type Config = z.input<typeof schema.ReportConfig>;
 
 export function Form() {
   const actionResult = useActionData<typeof action>();
@@ -85,7 +85,7 @@ export function Form() {
 
   return (
     <RemixFormProvider {...form}>
-      <RemixForm onSubmit={form.handleSubmit} method='post' className='flex flex-col gap-6'>
+      <RemixForm method='post' className='flex flex-col gap-6'>
         <EnableConfigForm />
         <GeneralConfigForm />
         <NotificationConfigForm />
@@ -107,8 +107,9 @@ function EnableConfigForm() {
         render={({ field: { ref, onChange, onBlur, value }, fieldState: { invalid } }) => (
           <FormItem dir='row' mobileDir='col'>
             <FormLabel title='通報を受け取るチャンネル' isRequired />
-            <FormControl ref={ref}>
+            <FormControl>
               <ChannelSelect
+                ref={ref}
                 classNames={FormSelectClassNames.single}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -141,8 +142,8 @@ function GeneralConfigForm() {
               title='モデレーターも通報の対象にする'
               description='有効にすると、「メンバー管理」権限を持つユーザーをメンバーが通報できるようになります。'
             />
-            <FormControl ref={ref}>
-              <Switch onChange={onChange} onBlur={onBlur} isSelected={value} />
+            <FormControl>
+              <Switch ref={ref} onChange={onChange} onBlur={onBlur} isSelected={value} />
             </FormControl>
           </FormItem>
         )}
@@ -156,8 +157,8 @@ function GeneralConfigForm() {
               title='進捗ボタンを表示する'
               description='送られた通報に「対処済み」「無視」などの、通報のステータスを管理できるボタンを表示します。'
             />
-            <FormControl ref={ref}>
-              <Switch onChange={onChange} onBlur={onBlur} isSelected={value} />
+            <FormControl>
+              <Switch ref={ref} onChange={onChange} onBlur={onBlur} isSelected={value} />
             </FormControl>
           </FormItem>
         )}
@@ -168,9 +169,9 @@ function GeneralConfigForm() {
 
 function NotificationConfigForm() {
   const { roles } = useLoaderData<typeof loader>();
-  const form = useRemixFormContext<Config>();
-  const { mention } = useWatch<Config>();
   const { guildId } = useParams();
+  const form = useRemixFormContext<Config>();
+  const disabled = !useWatch<Config>({ name: 'mention.enabled' });
 
   return (
     <FormCard title='通知設定'>
@@ -183,8 +184,8 @@ function NotificationConfigForm() {
               title='メンション通知を有効にする'
               description='通報が送られた際に特定のロールをメンションします。'
             />
-            <FormControl ref={ref}>
-              <Switch onChange={onChange} onBlur={onBlur} isSelected={value} />
+            <FormControl>
+              <Switch ref={ref} onChange={onChange} onBlur={onBlur} isSelected={value} />
             </FormControl>
           </FormItem>
         )}
@@ -197,19 +198,20 @@ function NotificationConfigForm() {
             <FormLabel
               title='メンションするロール （複数選択可）'
               isRequired
-              isDisabled={!mention?.enabled}
+              isDisabled={disabled}
             />
-            <FormControl ref={ref}>
+            <FormControl>
               <RoleSelect
-                classNames={FormSelectClassNames.multiple}
+                ref={ref}
                 onSelectionChange={(keys) => onChange(Array.from(keys))}
                 onBlur={onBlur}
+                classNames={FormSelectClassNames.multiple}
                 selectedKeys={value.filter((id) => roles.some((role) => role.id === id))}
                 selectionMode='multiple'
                 roles={roles}
                 disabledKeyFilter={(role) => role.managed || role.id === guildId}
                 isInvalid={invalid}
-                isDisabled={!mention?.enabled}
+                isDisabled={disabled}
                 disallowEmptySelection
               />
             </FormControl>

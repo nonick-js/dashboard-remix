@@ -69,7 +69,7 @@ export default function Page() {
 // #endregion
 
 // #region Form
-type Config = z.infer<typeof schema.AutoChangeVerifyLevelConfig>;
+type Config = z.input<typeof schema.AutoChangeVerifyLevelConfig>;
 
 export function Form() {
   const actionResult = useActionData<typeof action>();
@@ -94,7 +94,7 @@ export function Form() {
 
   return (
     <RemixFormProvider {...form}>
-      <RemixForm onSubmit={form.handleSubmit} method='post' className='flex flex-col gap-6'>
+      <RemixForm method='post' className='flex flex-col gap-6'>
         <EnableConfigForm />
         <GeneralConfigForm />
         <LogConfigForm />
@@ -115,8 +115,8 @@ function EnableConfigForm() {
         render={({ field: { ref, onChange, onBlur, value } }) => (
           <FormItem dir='row'>
             <FormLabel title='自動認証レベル変更を有効にする' />
-            <FormControl ref={ref}>
-              <Switch onChange={onChange} onBlur={onBlur} isSelected={value} />
+            <FormControl>
+              <Switch ref={ref} onChange={onChange} onBlur={onBlur} isSelected={value} />
             </FormControl>
           </FormItem>
         )}
@@ -133,8 +133,8 @@ const HourInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref) =>
         base: 'max-sm:w-[120px] w-[150px]',
         mainWrapper: 'data-[invalid=true]:text-danger',
       }}
-      variant='bordered'
       type='number'
+      variant='bordered'
       startContent={
         <Icon className='text-[20px] text-foreground-400' icon='solar:clock-circle-bold' />
       }
@@ -147,7 +147,7 @@ const HourInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref) =>
 function CustomRadioClassName(color: Omit<GuildVerificationLevel, 'None'>) {
   return {
     base: cn(
-      'inline-flex m-0 bg-content2 items-center justify-between w-full max-w-none',
+      'inline-flex m-0 bg-default-100 items-center justify-between w-full max-w-none',
       ' w-full cursor-pointer rounded-lg gap-2 px-4 py-3',
     ),
     label: cn(
@@ -163,7 +163,7 @@ function CustomRadioClassName(color: Omit<GuildVerificationLevel, 'None'>) {
 
 function GeneralConfigForm() {
   const form = useFormContext<Config>();
-  const { enabled } = useWatch<Config>();
+  const disabled = !useWatch<Config>();
 
   return (
     <FormCard title='全般設定'>
@@ -173,13 +173,14 @@ function GeneralConfigForm() {
           name='startHour'
           render={({ field: { ref, onChange, value }, fieldState: { invalid } }) => (
             <FormItem dir='row'>
-              <FormLabel title='開始時間（0:00～23:00）' isRequired isDisabled={!enabled} />
-              <FormControl ref={ref}>
+              <FormLabel title='開始時間（0:00～23:00）' isRequired isDisabled={disabled} />
+              <FormControl>
                 <HourInput
-                  onChange={(e) => onChange(Number(e.target.value))}
+                  ref={ref}
+                  onChange={onChange}
                   value={String(value)}
                   isInvalid={invalid}
-                  isDisabled={!enabled}
+                  isDisabled={disabled}
                   isRequired
                 />
               </FormControl>
@@ -191,13 +192,14 @@ function GeneralConfigForm() {
           name='endHour'
           render={({ field: { ref, onChange, value }, fieldState: { invalid } }) => (
             <FormItem dir='row'>
-              <FormLabel title='終了時間（0:00～23:00）' isRequired isDisabled={!enabled} />
-              <FormControl ref={ref}>
+              <FormLabel title='終了時間（0:00～23:00）' isRequired isDisabled={disabled} />
+              <FormControl>
                 <HourInput
-                  onChange={(e) => onChange(Number(e.target.value))}
+                  ref={ref}
+                  onChange={onChange}
                   value={String(value)}
                   isInvalid={invalid}
-                  isDisabled={!enabled}
+                  isDisabled={disabled}
                   isRequired
                 />
               </FormControl>
@@ -210,14 +212,15 @@ function GeneralConfigForm() {
         name='level'
         render={({ field: { ref, onChange, onBlur, value }, fieldState: { invalid } }) => (
           <FormItem className='gap-4' dir='col'>
-            <FormLabel title='期間内に設定する認証レベル' isRequired isDisabled={!enabled} />
-            <FormControl ref={ref}>
+            <FormLabel title='期間内に設定する認証レベル' isRequired isDisabled={disabled} />
+            <FormControl>
               <RadioGroup
-                onChange={(e) => onChange(Number(e.target.value))}
+                ref={ref}
+                onChange={onChange}
                 onBlur={onBlur}
                 value={String(value)}
-                isDisabled={!enabled}
                 isInvalid={invalid}
+                isDisabled={disabled}
               >
                 <Radio
                   classNames={CustomRadioClassName(GuildVerificationLevel.Low)}
@@ -259,7 +262,8 @@ function GeneralConfigForm() {
 function LogConfigForm() {
   const form = useFormContext<Config>();
   const { channels } = useLoaderData<typeof loader>();
-  const { enabled, log } = useWatch<Config>();
+  const enabled = useWatch<Config>({ name: 'enabled' });
+  const logEnabled = useWatch<Config>({ name: 'log.enabled' });
 
   return (
     <FormCard title='ログ設定'>
@@ -273,8 +277,9 @@ function LogConfigForm() {
               description='自動変更の開始・終了時にログを送信します。'
               isDisabled={!enabled}
             />
-            <FormControl ref={ref}>
+            <FormControl>
               <Switch
+                ref={ref}
                 onChange={onChange}
                 onBlur={onBlur}
                 isSelected={value}
@@ -291,11 +296,13 @@ function LogConfigForm() {
           <FormItem dir='row' mobileDir='col'>
             <FormLabel
               title='ログを送信するチャンネル'
-              isDisabled={!enabled || !log?.enabled}
+              isDisabled={!enabled || !logEnabled}
               isRequired
             />
-            <FormControl ref={ref}>
+            <FormControl>
               <ChannelSelect
+                ref={ref}
+                variant='faded'
                 classNames={FormSelectClassNames.single}
                 onChange={onChange}
                 onBlur={onBlur}
@@ -303,7 +310,7 @@ function LogConfigForm() {
                 channels={channels}
                 types={{ include: [ChannelType.GuildText] }}
                 isInvalid={invalid}
-                isDisabled={!enabled || !log?.enabled}
+                isDisabled={!enabled || !logEnabled}
                 disallowEmptySelection
               />
             </FormControl>

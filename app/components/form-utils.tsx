@@ -31,13 +31,13 @@ export function FormCard({ title, children }: { title?: string; children: ReactN
 }
 
 export function FormActionButtons() {
-  const { formState, reset } = useRemixFormContext();
+  const { formState, reset, handleSubmit } = useRemixFormContext();
 
   return (
     <div className='flex items-center gap-3 w-full pb-12'>
       <Button
+        onClick={handleSubmit}
         color='primary'
-        type='submit'
         startContent={
           !formState.isSubmitting && <Icon icon='solar:diskette-bold' className='text-[20px]' />
         }
