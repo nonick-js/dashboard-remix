@@ -1,13 +1,15 @@
 # NoNICK.js Dashboard
 
 > [!WARNING]
-> このプロジェクトは現在開発中であり、本番環境で動作させる準備が整っていません。
+> `🚧` このプロジェクトは現在開発中であり、本番環境で動作させる準備が整っていません。
+
+![preview](/.github/assets/preview.png)
 
 [Remix](https://remix.run)で構築された、NoNICK.jsの設定を行えるWebダッシュボード
 
 ## 📑Usage
 ### Discordアプリケーションを作成する
-まず、[Discord開発者ポータル](https://discord.com/developers/applications)でWebダッシュボードに使うDiscordアプリケーションを作成する必要があります。アプリケーションを作成したら、「OAuth2」タブにアクセスし、`Redirects`に以下のURLを追加してください。
+まず、[Discord開発者ポータル](https://discord.com/developers/applications)でWebダッシュボードに使うDiscordアプリケーションを作成する必要があります。アプリケー🚥ションを作成したら、「OAuth2」タブにアクセスし、`Redirects`に以下のURLを追加してください。
 
 * `http://localhost:5173/auth/callback`
 * `http://localhost:5173/invite/callback`
