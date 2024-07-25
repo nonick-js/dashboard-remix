@@ -9,7 +9,7 @@
 
 ## 📑Usage
 ### Discordアプリケーションを作成する
-まず、[Discord開発者ポータル](https://discord.com/developers/applications)でWebダッシュボードに使うDiscordアプリケーションを作成する必要があります。アプリケー🚥ションを作成したら、「OAuth2」タブにアクセスし、`Redirects`に以下のURLを追加してください。
+まず、[Discord開発者ポータル](https://discord.com/developers/applications)でWebダッシュボードに使うDiscordアプリケーションを作成する必要があります。アプリケーションを作成したら、「OAuth2」タブにアクセスし、`Redirects`に以下のURLを追加してください。
 
 * `http://localhost:5173/auth/callback`
 * `http://localhost:5173/invite/callback`
