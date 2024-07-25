@@ -38,15 +38,14 @@ export const loader = async (args: LoaderFunctionArgs) => {
   if (!ok) return redirect('/');
 
   const roles = data.roles;
-  const [channels, config] = await Promise.all([
-    getChannels(data.guild.id),
-    model.findOne({ guildId: data.guild.id }),
-  ]);
+  const channelsPromise = getChannels(data.guild.id);
+  const configPromise = model
+    .findOne({ guildId: data.guild.id })
+    .then((config) => schema.safeParse(config).data);
 
-  return json(
-    { roles, channels, config: schema.safeParse(config).data },
-    { headers: { 'Cache-Control': 'no-store' } },
-  );
+  const [channels, config] = await Promise.all([channelsPromise, configPromise]);
+
+  return json({ roles, channels, config }, { headers: { 'Cache-Control': 'no-store' } });
 };
 
 export const action = async (args: ActionFunctionArgs) => {
@@ -241,6 +240,7 @@ function FilterConfigForm() {
                     onBlur={onBlur}
                     value={Array.isArray(value) ? value.join(', ') : String(value)}
                     classNames={{
+                      inputWrapper: 'bg-content1',
                       innerWrapper: 'flex-col items-end',
                     }}
                     variant='bordered'

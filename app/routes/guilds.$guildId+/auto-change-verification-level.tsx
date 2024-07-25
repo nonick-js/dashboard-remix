@@ -35,15 +35,14 @@ export const loader = async (args: LoaderFunctionArgs) => {
   const { ok, data } = await hasAccessPermission(args);
   if (!ok) return redirect('/');
 
-  const [channels, config] = await Promise.all([
-    getChannels(data.guild.id),
-    model.findOne({ guildId: data.guild.id }),
-  ]);
+  const channelsPromise = getChannels(data.guild.id);
+  const configPromise = model
+    .findOne({ guildId: data.guild.id })
+    .then((config) => schema.safeParse(config).data);
 
-  return json(
-    { channels, config: schema.safeParse(config).data },
-    { headers: { 'Cache-Control': 'no-store' } },
-  );
+  const [channels, config] = await Promise.all([channelsPromise, configPromise]);
+
+  return json({ channels, config }, { headers: { 'Cache-Control': 'no-store' } });
 };
 
 export const action = async (args: ActionFunctionArgs) => {

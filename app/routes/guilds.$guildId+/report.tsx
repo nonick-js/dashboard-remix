@@ -2,8 +2,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Switch } from '@nextui-org/react';
 import { type ActionFunctionArgs, type LoaderFunctionArgs, json, redirect } from '@remix-run/node';
 import type { MetaFunction } from '@remix-run/react';
-import { Form as RemixForm, useActionData, useLoaderData, useParams } from '@remix-run/react';
+import {
+  Await,
+  Form as RemixForm,
+  defer,
+  useActionData,
+  useLoaderData,
+  useParams,
+} from '@remix-run/react';
 import { ChannelType } from 'discord-api-types/v10';
+import React, { Suspense } from 'react';
 import { useWatch } from 'react-hook-form';
 import { RemixFormProvider, useRemixForm, useRemixFormContext } from 'remix-hook-form';
 import type { z } from 'zod';
@@ -29,15 +37,14 @@ export const loader = async (args: LoaderFunctionArgs) => {
   if (!ok) return redirect('/');
 
   const roles = data.roles;
-  const [channels, config] = await Promise.all([
-    getChannels(data.guild.id),
-    model.findOne({ guildId: data.guild.id }),
-  ]);
+  const channelsPromise = getChannels(data.guild.id);
+  const configPromise = model
+    .findOne({ guildId: data.guild.id })
+    .then((config) => schema.safeParse(config).data);
 
-  return json(
-    { roles, channels, config: schema.safeParse(config).data },
-    { headers: { 'Cache-Control': 'no-store' } },
-  );
+  const [channels, config] = await Promise.all([channelsPromise, configPromise]);
+
+  return defer({ roles, channels, config }, { headers: { 'Cache-Control': 'no-store' } });
 };
 
 export const action = async (args: ActionFunctionArgs) => {
