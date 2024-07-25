@@ -3,9 +3,8 @@
     "prefix": "importms",
 		"scope": "typescript,typescriptreact,javascript,javascriptreact",
     "body": [
-      "import * as model from '~/libs/database/models';",
-      "import * as schema from '~/libs/database/zod';",
-      "$0"
+      "import { $1 as model } from '~/libs/database/models';",
+      "import { $1 as schema } from '~/libs/database/zod';"
     ],
     "description": "Imports model and schema from the specified paths."
   }

@@ -1,23 +1,24 @@
 import { DevTool } from '@hookform/devtools';
 import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
 import { Button, Card, CardBody, CardHeader, cn } from '@nextui-org/react';
-import { useActionData, useNavigation } from '@remix-run/react';
-import { type ReactNode, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import type { ReactNode } from 'react';
 import { useRemixFormContext } from 'remix-hook-form';
-import type { updateConfig } from '~/.server/dashboard';
 
 export const FormSelectClassNames = {
   multiple: {
     trigger: 'py-2',
-    base: 'md:max-w-xs',
+    base: 'md:max-w-[400px]',
   },
   single: {
-    base: 'md:max-w-xs',
+    base: 'md:max-w-[320px]',
   },
 };
 
-export function FormCard({ title, children }: { title?: string; children: ReactNode }) {
+export function FormCard({
+  title,
+  className,
+  children,
+}: { title?: string; className?: string; children: ReactNode }) {
   return (
     <Card>
       {title && (
@@ -25,7 +26,9 @@ export function FormCard({ title, children }: { title?: string; children: ReactN
           <h3 className='text-lg font-semibold'>{title}</h3>
         </CardHeader>
       )}
-      <CardBody className={cn('flex flex-col gap-8 p-6', { 'pt-0': title })}>{children}</CardBody>
+      <CardBody className={cn('flex flex-col gap-8 p-6', { 'pt-0': title }, className)}>
+        {children}
+      </CardBody>
     </Card>
   );
 }

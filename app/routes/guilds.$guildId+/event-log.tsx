@@ -15,8 +15,8 @@ import { ChannelSelect } from '~/components/selects/channel-select';
 import { FormControl, FormField, FormItem, FormLabel } from '~/components/ui/form';
 import { useFormReset } from '~/hooks/form-revalidate';
 import { useFormToast } from '~/hooks/form-toast';
-import * as model from '~/libs/database/models';
-import * as schema from '~/libs/database/zod';
+import { EventLogConfig as model } from '~/libs/database/models';
+import { EventLogConfig as schema } from '~/libs/database/zod';
 
 // #region Page
 export const meta: MetaFunction = () => {
@@ -29,17 +29,17 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   const [channels, config] = await Promise.all([
     getChannels(data.guild.id),
-    model.EventLogConfig.findOne({ guildId: data.guild.id }),
+    model.findOne({ guildId: data.guild.id }),
   ]);
 
   return json(
-    { channels, config: schema.EventLogConfig.safeParse(config).data },
+    { channels, config: schema.safeParse(config).data },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 };
 
 export const action = async (args: ActionFunctionArgs) => {
-  const res = await updateConfig(args, model.EventLogConfig, schema.EventLogConfig);
+  const res = await updateConfig(args, model, schema);
   return json(res);
 };
 
@@ -57,14 +57,14 @@ export default function Page() {
 // #endregion
 
 // #region Form
-type Config = z.input<typeof schema.EventLogConfig>;
+type Config = z.input<typeof schema>;
 
 export function Form() {
   const actionResult = useActionData<typeof action>();
   const { config } = useLoaderData<typeof loader>();
 
   const form = useRemixForm<Config>({
-    resolver: zodResolver(schema.EventLogConfig),
+    resolver: zodResolver(schema),
     defaultValues: config ?? {
       timeout: { enabled: false, channel: null },
       kick: { enabled: false, channel: null },

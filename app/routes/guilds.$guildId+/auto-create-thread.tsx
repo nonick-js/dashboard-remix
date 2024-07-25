@@ -21,8 +21,8 @@ import { ChannelSelect } from '~/components/selects/channel-select';
 import { FormControl, FormField, FormItem, FormLabel } from '~/components/ui/form';
 import { useFormReset } from '~/hooks/form-revalidate';
 import { useFormToast } from '~/hooks/form-toast';
-import * as model from '~/libs/database/models';
-import * as schema from '~/libs/database/zod';
+import { AutoCreateThreadConfig as model } from '~/libs/database/models';
+import { AutoCreateThreadConfig as schema } from '~/libs/database/zod';
 
 // #region Page
 export const meta: MetaFunction = () => {
@@ -35,17 +35,17 @@ export const loader = async (args: LoaderFunctionArgs) => {
 
   const [channels, config] = await Promise.all([
     getChannels(data.guild.id),
-    model.AutoCreateThreadConfig.findOne({ guildId: data.guild.id }),
+    model.findOne({ guildId: data.guild.id }),
   ]);
 
   return json(
-    { channels, config: schema.AutoCreateThreadConfig.safeParse(config).data },
+    { channels, config: schema.safeParse(config).data },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 };
 
 export const action = async (args: ActionFunctionArgs) => {
-  const res = await updateConfig(args, model.AutoCreateThreadConfig, schema.AutoCreateThreadConfig);
+  const res = await updateConfig(args, model, schema);
   return json(res);
 };
 
@@ -65,14 +65,14 @@ export default function Page() {
 // #endregion
 
 // #region Form
-type Config = z.input<typeof schema.AutoCreateThreadConfig>;
+type Config = z.input<typeof schema>;
 
 export function Form() {
   const actionResult = useActionData<typeof action>();
   const { config } = useLoaderData<typeof loader>();
 
   const form = useRemixForm<Config>({
-    resolver: zodResolver(schema.AutoCreateThreadConfig),
+    resolver: zodResolver(schema),
     defaultValues: config ?? {
       enabled: false,
       channels: [],
