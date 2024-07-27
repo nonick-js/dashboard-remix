@@ -22,7 +22,7 @@ const HeaderDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
-  return <h5 ref={ref} className={cn('max-sm:text-sm text-default-500', className)} {...props} />;
+  return <h2 ref={ref} className={cn('max-sm:text-sm text-default-500', className)} {...props} />;
 });
 HeaderDescription.displayName = 'HeaderDescription';
 

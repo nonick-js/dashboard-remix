@@ -1,4 +1,4 @@
-import { NavbarBrand, NavbarContent, Navbar as NextUINavbar } from '@nextui-org/navbar';
+import { NavbarBrand, NavbarContent, NavbarItem, Navbar as NextUINavbar } from '@nextui-org/navbar';
 import type { DiscordUser } from '~/.server/auth';
 import { Logo } from '~/components/logo';
 import { ThemeToggle } from '~/components/theme-toggle';
@@ -11,8 +11,14 @@ export function Navbar({ user }: { user?: DiscordUser }) {
         <Logo height={18} />
       </NavbarBrand>
       <NavbarContent className='flex gap-2 items-center' justify='end'>
-        <ThemeToggle />
-        {user && <UserDropdown user={user} />}
+        <NavbarItem>
+          <ThemeToggle />
+        </NavbarItem>
+        {user && (
+          <NavbarItem>
+            <UserDropdown user={user} />
+          </NavbarItem>
+        )}
       </NavbarContent>
     </NextUINavbar>
   );

@@ -7,6 +7,7 @@ export function ThemeToggle(props: ButtonProps) {
 
   return (
     <Button
+      className='rounded-full'
       variant='light'
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       disableRipple

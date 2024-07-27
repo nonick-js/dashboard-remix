@@ -33,7 +33,7 @@ const discordStrategy = new DiscordStrategy(
           : Number.parseInt(profile.__json.discriminator) % 5;
       avatarUrl = `${Discord.Endpoints.CDN}/embed/avatars/${defaultAvatarNumber}.png`;
     } else {
-      const format = profile.__json.avatar?.startsWith('a_') ? 'git' : 'png';
+      const format = profile.__json.avatar?.startsWith('a_') ? 'git' : 'webp';
       avatarUrl = `${Discord.Endpoints.CDN}/avatars/${profile.id}/${profile.__json.avatar}.${format}`;
     }
 

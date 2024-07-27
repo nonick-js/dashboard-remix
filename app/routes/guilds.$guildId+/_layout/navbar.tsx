@@ -1,5 +1,5 @@
 import { Icon } from '@iconify-icon/react/dist/iconify.mjs';
-import { NavbarBrand, NavbarContent, Navbar as NextUINavbar } from '@nextui-org/navbar';
+import { NavbarBrand, NavbarContent, NavbarItem, Navbar as NextUINavbar } from '@nextui-org/navbar';
 import { Button, Modal, ModalContent, useDisclosure } from '@nextui-org/react';
 import { Link, useLoaderData } from '@remix-run/react';
 import { Logo } from '~/components/logo';
@@ -19,9 +19,11 @@ export function Navbar() {
           <Logo height={18} />
         </Link>
       </NavbarBrand>
-      <NavbarContent className='flex gap-2 items-center' justify='end'>
-        <ThemeToggle />
-        {user && <UserDropdown user={user} />}
+      <NavbarContent justify='end'>
+        <NavbarItem className='flex gap-2 items-center'>
+          <ThemeToggle />
+          <UserDropdown user={user} />
+        </NavbarItem>
       </NavbarContent>
     </NextUINavbar>
   );

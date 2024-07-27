@@ -76,6 +76,7 @@ function SingleSelectItem({ guild }: { guild: APIGuild | RESTAPIPartialCurrentUs
         src={
           guild.icon ? `${Discord.Endpoints.CDN}/icons/${guild.id}/${guild.icon}.webp` : undefined
         }
+        alt={`${guild.name}のサーバーアイコン`}
         showFallback
       />
       <p className='flex-1 whitespace-nowrap font-semibold truncate'>{guild.name}</p>
